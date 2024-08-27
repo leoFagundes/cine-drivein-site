@@ -1,7 +1,11 @@
+import Hero from "./(sections)/hero";
+import Movies from "./(sections)/movies";
+
 export default function Home() {
   return (
-    <main className="bg-red-400 w-full">
-      <p>Hello World</p>
+    <main className="flex flex-col w-full ">
+      <Hero />
+      <Movies />
     </main>
   );
 }

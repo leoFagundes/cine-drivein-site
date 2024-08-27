@@ -20,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang="pt-br">
       <body
-        className={`${montserrat.className} bg-primary flex justify-center text-gray`}
+        className={`${montserrat.className} w-screen bg-primary flex justify-center text-gray min-h-screen`}
       >
         <section className="w-11/12 sm:w-10/12">
           <Header />
