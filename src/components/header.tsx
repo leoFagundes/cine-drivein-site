@@ -56,8 +56,8 @@ export default function Header() {
   ];
 
   return (
-    <nav className="relative flex items-center justify-between h-20 my-4">
-      <Image src={"logo.svg"} width={120} height={60} alt="logo" />
+    <nav className="relative flex items-center justify-between h-20 my-4 w-11/12 sm:w-10/12">
+      <Image src={"svg/logo.svg"} width={120} height={60} alt="logo" />
       <ul className="items-center gap-7 font-semibold text-xs hidden lg:flex">
         {items.map((item) => (
           <li key={item.key} className="text-xs hover:opacity-90">

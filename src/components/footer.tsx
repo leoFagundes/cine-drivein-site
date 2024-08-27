@@ -5,12 +5,12 @@ import { MdOutlineAlternateEmail } from "react-icons/md";
 
 export default function Footer() {
   return (
-    <footer className="pb-8">
+    <footer className="pb-8 w-11/12 sm:w-10/12">
       <hr className="my-8" />
 
       <div className="flex justify-around flex-wrap">
         <div className="flex flex-col gap-2 w-52">
-          <Image src={"logo.svg"} width={120} height={60} alt="logo" />
+          <Image src={"svg/logo.svg"} width={120} height={60} alt="logo" />
           <span className="font-semibold text-sm">
             O único cinema drive-in da América Latina
           </span>

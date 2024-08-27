@@ -23,7 +23,7 @@ export default function NotFound() {
         </div>
       </div>
       <Image
-        src={"page-not-found.svg"}
+        src={"svg/page-not-found.svg"}
         width={528}
         height={472}
         alt="page-not-found"
