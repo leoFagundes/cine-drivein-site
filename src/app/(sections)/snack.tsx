@@ -8,7 +8,7 @@ export default function Snack() {
     <SectionContainer id="snack" title="LANCHONETE" subtitle="Cardápio">
       <div className="flex items-center gap-4 relative w-screen h-full">
         <div className="flex flex-col items-end justify-center p-8 gap-4 box-border w-full h-full">
-          <div className="w-80 font-semibold">
+          <div className="w-56 sm:w-80 font-semibold text-sm sm:text-base">
             <p>
               Bem-vindo à nossa lanchonete! Aproveite nossos lanches enquanto
               curte um bom filme. Estamos prontos para atender você com

@@ -18,10 +18,12 @@ export default function HowItWorks() {
       title: "Cuidados com os Faróis",
       description: (
         <>
-          Quando o filme começar, lembre-se de manter os faróis do carro
-          apagados. Acender os faróis pode interferir na projeção, assim como
-          acender a luz dentro de um cinema comum. Se precisar chamar o garçom
-          ou em caso de emergência, utilize apenas o farolete ou o pisca alerta.
+          Quando o filme começar, lembre-se de manter os faróis do carro{" "}
+          <span className="text-primary">apagados</span>. Acender os faróis pode
+          interferir na projeção, assim como acender a luz dentro de um cinema
+          comum. Se precisar chamar o garçom ou em caso de emergência, utilize
+          apenas o{" "}
+          <span className="text-primary">farolete ou o pisca alerta</span>.
         </>
       ),
     },
@@ -64,9 +66,12 @@ export default function HowItWorks() {
       title: "Banheiros de Fácil Acesso",
       description: (
         <>
-          Os banheiros estão localizados na parte direita do cinema e são
-          identificados por um letreiro amarelo. Foram reformados para melhor
-          atender a todos os nossos visitantes, incluindo pessoas com
+          Os banheiros estão{" "}
+          <span className="text-primary">
+            localizados na parte direita do cinema
+          </span>{" "}
+          e são identificados por um letreiro amarelo. Foram reformados para
+          melhor atender a todos os nossos visitantes, incluindo pessoas com
           deficiência física e crianças.
         </>
       ),

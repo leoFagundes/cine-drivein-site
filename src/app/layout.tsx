@@ -3,6 +3,7 @@ import { Montserrat } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
+import ScrollUp from "@/components/scrollUp";
 
 const montserrat = Montserrat({ subsets: ["latin"] });
 
@@ -25,6 +26,7 @@ export default function RootLayout({
         <Header />
         <section className="flex justify-center w-full">{children}</section>
         <Footer />
+        <ScrollUp />
       </body>
     </html>
   );
