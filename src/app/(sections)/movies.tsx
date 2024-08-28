@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React from "react";
 import SectionContainer from "../containers/sectionContainer";
 
@@ -37,7 +38,7 @@ export default function Movies() {
             key={index}
             className="w-[300px] hover:opacity-80 hover:cursor-pointer duration-200 hover:"
           >
-            <img src={image} alt={title} className="rounded-t-lg " />
+            <img src={image} alt={title} className="rounded-t-lg" />
             <div className="flex flex-col relative gap-2 p-3 border-r-2 border-b-2 border-l-2 border-gray rounded-b-lg">
               <p className="text-xs font-bold">{title}</p>
               <p className=" text-xs">

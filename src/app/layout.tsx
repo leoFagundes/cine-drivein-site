@@ -20,10 +20,10 @@ export default function RootLayout({
   return (
     <html lang="pt-br">
       <body
-        className={`${montserrat.className} w-screen bg-primary flex flex-col items-center justify-center text-gray min-h-screen overflow-x-hidden`}
+        className={`${montserrat.className} w-screen bg-primary flex flex-col items-center text-gray min-h-screen overflow-x-hidden`}
       >
         <Header />
-        <section className="flex justify-center">{children}</section>
+        <section className="flex justify-center w-full">{children}</section>
         <Footer />
       </body>
     </html>

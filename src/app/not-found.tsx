@@ -8,7 +8,7 @@ export default function NotFound() {
       className="flex flex-1 items-center gap-8 justify-around flex-wrap"
       style={{ minHeight: "calc(100vh - 326px)" }}
     >
-      <div className="relative flex items-center flex-col gap-4">
+      <div className="relative flex items-center flex-col gap-4 sm:hidden">
         <div className="absolute flex items-center justify-center h-full w-full">
           <BiError className="text-gray/20 scale-[15]" />
         </div>

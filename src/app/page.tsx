@@ -1,3 +1,5 @@
+import DriveinFilm from "./(sections)/driveinFilm";
+import DriveinLocation from "./(sections)/driveinLocation";
 import Hero from "./(sections)/hero";
 import Movies from "./(sections)/movies";
 import Prices from "./(sections)/prices";
@@ -10,6 +12,8 @@ export default function Home() {
       <Movies />
       <Prices />
       <Snack />
+      <DriveinFilm />
+      <DriveinLocation />
     </main>
   );
 }

@@ -1,8 +1,11 @@
+"use client";
+
+/* eslint-disable @next/next/no-img-element */
 import SectionContainer from "../containers/sectionContainer";
 
 export default function Snack() {
   return (
-    <SectionContainer title="LANCHONETE" subtitle="Cardápio">
+    <SectionContainer id="snack" title="LANCHONETE" subtitle="Cardápio">
       <div className="flex items-center gap-4 relative w-screen h-full">
         <div className="flex flex-col items-end justify-center p-8 gap-4 box-border w-full h-full">
           <div className="w-80 font-semibold">

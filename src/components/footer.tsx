@@ -5,7 +5,7 @@ import { MdOutlineAlternateEmail } from "react-icons/md";
 
 export default function Footer() {
   return (
-    <footer className="pb-8 w-11/12 sm:w-10/12">
+    <footer id="contact" className="pb-8 w-11/12 sm:w-10/12">
       <hr className="my-8" />
 
       <div className="flex flex-col sm:flex-row items-center justify-center gap-4 md:justify-around flex-wrap">
