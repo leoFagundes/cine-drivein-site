@@ -76,8 +76,8 @@ export default function Header() {
         </div>
       </div>
       {opened && (
-        <div className="absolute lg:hidden block right-0 bottom-0 translate-y-36 p-3 border border-gray/50 rounded-md z-10 bg-primary shadow-xl">
-          <ul className="flex flex-col gap-2 font-semibold ">
+        <div className="absolute lg:hidden block right-0 bottom-0 translate-y-40 p-3 border border-gray/50 rounded-md z-10 bg-primary shadow-xl">
+          <ul className="flex flex-col gap-3 font-semibold ">
             {items.map((item) => (
               <li key={item.key} className="text-xs">
                 <Link className="flex gap-2 items-center" href={item.link}>

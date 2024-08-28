@@ -1,6 +1,5 @@
 import React from "react";
 import SectionContainer from "../containers/sectionContainer";
-import Image from "next/image";
 
 export default function Movies() {
   const data = [
@@ -20,12 +19,19 @@ export default function Movies() {
       image: "images/image_20.png",
     },
   ];
+
+  const containerWidth = 300 * data.length + 48 * data.length;
+  console.log(containerWidth);
+
   return (
     <SectionContainer
       title="EM CARTAZ"
       subtitle="Programação de 22 a 28 de Agosto"
     >
-      <div className="flex justify-around w-full py-6 gap-8 flex-wrap max-w-[1100px]">
+      <div
+        className={`flex justify-around w-full py-6 gap-8 flex-wrap`}
+        style={{ maxWidth: containerWidth }}
+      >
         {data.map(({ title, showtime, image }, index) => (
           <div
             key={index}

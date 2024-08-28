@@ -8,14 +8,14 @@ export default function Footer() {
     <footer className="pb-8 w-11/12 sm:w-10/12">
       <hr className="my-8" />
 
-      <div className="flex justify-around flex-wrap">
-        <div className="flex flex-col gap-2 w-52">
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-4 md:justify-around flex-wrap">
+        <div className="flex flex-col items-center sm:items-start gap-2 w-52">
           <Image src={"svg/logo.svg"} width={120} height={60} alt="logo" />
-          <span className="font-semibold text-sm">
+          <span className="font-semibold text-sm sm:text-start text-center">
             O único cinema drive-in da América Latina
           </span>
         </div>
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 w-full sm:w-auto items-center sm:items-start sm:p-0 p-2">
           <span className="font-semibold text-base">Nossas Redes Sociais</span>
           <Link
             className="text-sm flex items-center gap-2 hover:underline"
@@ -32,7 +32,7 @@ export default function Footer() {
             <FaFacebookF size={"24px"} /> @cinedrivein
           </Link>
         </div>
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 w-full sm:w-auto items-center sm:items-start sm:p-0 p-2">
           <span className="font-semibold text-base">Contato</span>
           <Link
             className="text-sm flex items-center gap-2 hover:underline"
@@ -50,8 +50,10 @@ export default function Footer() {
             cinedrivein@cinedrivein.com
           </Link>
         </div>
-        <div>
+        <div className="flex flex-col gap-4 w-full sm:w-auto items-center sm:items-start sm:p-0 p-2">
           <span className="font-semibold text-base">Seja um Anunciante</span>
+          <span className="text-sm">Seja um Anunciante</span>
+          <span className="text-sm">Seja um Anunciante</span>
         </div>
       </div>
     </footer>
