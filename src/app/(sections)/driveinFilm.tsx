@@ -41,7 +41,14 @@ export default function DriveinFilm() {
         </p>
       </div>
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <img className="h-full" src="/images/history.png" alt="menu" />
+        <a
+          className="h-full"
+          href="/images/history.png"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img className="h-full" src="/images/history.png" alt="history" />
+        </a>
       </Modal>
     </SectionContainer>
   );

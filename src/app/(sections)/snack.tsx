@@ -58,7 +58,14 @@ export default function Snack() {
                 alt="menu"
               />
               <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-                <img className="h-full" src="/images/menu.png" alt="menu" />
+                <a
+                  className="h-full"
+                  href="/images/menu.png"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img className="h-full" src="/images/menu.png" alt="menu" />
+                </a>
               </Modal>
             </div>
           </div>

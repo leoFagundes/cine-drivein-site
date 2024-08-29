@@ -70,7 +70,7 @@ export default function BecomeAnAdvertiser() {
         />
       </div>
 
-      <div className="my-8 flex justify-center lg:justify-between gap-4 text-center font-semibold text-xs sm:text-sm">
+      <div className="flex justify-center lg:justify-between gap-4 text-center font-semibold text-xs sm:text-sm my-6">
         <div className="flex flex-col items-center justify-center gap-2 max-w-[300px]">
           <FaLocationDot size={"32px"} className="text-primary" />
           <p>Ótima localização e fácil acesso, no coração de Brasília</p>
@@ -88,7 +88,7 @@ export default function BecomeAnAdvertiser() {
         </div>
       </div>
 
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-6 my-6">
         <h1 className="text-center self-center text-primary font-semibold text-3xl">
           EMPRESAS QUE JÁ ANUNCIARAM
         </h1>
@@ -107,7 +107,7 @@ export default function BecomeAnAdvertiser() {
         </div>
       </div>
 
-      <div className="flex justify-center flex-wrap-reverse items-center gap-8 my-8">
+      <div className="flex justify-center flex-wrap-reverse items-center gap-8 my-6">
         <div className="flex flex-col gap-4 max-w-full lg:max-w-[300px]">
           <h3 className="text-primary font-bold text-xl">
             O cinema é o tema do premiado longa metragem, “O último Cine Drive
@@ -130,7 +130,7 @@ export default function BecomeAnAdvertiser() {
         ></iframe>
       </div>
 
-      <div className="flex flex-col items-center gap-3">
+      <div className="flex flex-col items-center gap-3 my-6">
         <h1 className="text-center self-center text-primary font-semibold text-3xl">
           NOSSOS FILMES
         </h1>
@@ -138,7 +138,7 @@ export default function BecomeAnAdvertiser() {
           Os filmes exibidos são, geralmente, voltados para a família e casais,
           com filmes de animação e comédias românticas.
         </p>
-        <p className="text-center font-semibold max-w-[600px]">
+        <p className="text-center text-lg font-semibold max-w-[600px]">
           O Cine Drive-in conta atualmente com três sessões:
         </p>
         <div className="grid grid-cols-3 items-center gap-3 text-center mt-4">
@@ -151,14 +151,14 @@ export default function BecomeAnAdvertiser() {
           </div>
           <div className="flex flex-col items-center justify-center gap-1 max-w-[200px]">
             <FaFilm size={"32px"} className="text-primary" />
-            <p className="font-semibold">18:30</p>
+            <p className="font-semibold">20:20</p>
             <p className="text-sm max-w-[250px]">
               <i>Filmes para público jovem/adulto</i>
             </p>
           </div>
           <div className="flex flex-col items-center justify-center gap-1 max-w-[200px]">
             <FaFilm size={"32px"} className="text-primary" />
-            <p className="font-semibold">18:30</p>
+            <p className="font-semibold">22:10</p>
             <p className="text-sm max-w-[250px]">
               <i>Filmes para público jovem/adulto</i>
             </p>
@@ -166,7 +166,7 @@ export default function BecomeAnAdvertiser() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
         <img className="hidden md:block" src="images/people.png" alt="people" />
         <article className="flex flex-col gap-2">
           <h1 className="text-center self-center text-primary font-semibold text-3xl">
@@ -181,9 +181,8 @@ export default function BecomeAnAdvertiser() {
               </span>
               <br />
               <br />A principal faixa etária para os filmes adultos está entre{" "}
-              <span className="font-semibold">20 e 50</span>
-              anos. Nos filmes infantis sempre há muitas crianças com seus
-              familiares.
+              <span className="font-semibold">20 e 50</span> anos. Nos filmes
+              infantis sempre há muitas crianças com seus familiares.
               <br />
               <br />O número de carros está entre{" "}
               <span className="font-semibold">1500 e 2000 ao mês</span>, ou

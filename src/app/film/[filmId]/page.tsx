@@ -23,17 +23,11 @@ export default function FilmDetails({ params }: FilmDetailsProps) {
     duration: "102 min.",
     language: "Legendado",
     displayDate: "22 a 28/08/2024",
-    trailer: (
-      <iframe
-        className="w-full h-[300px] md:h-[500px] rounded-lg shadow-card"
-        src="https://www.youtube.com/embed/crJfmNciZso?si=v6U1EN5kW5rEEqGB"
-        title="YouTube video player"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        referrerPolicy="strict-origin-when-cross-origin"
-        allowFullScreen
-      ></iframe>
-    ),
+    trailer: "https://www.youtube.com/watch?v=crJfmNciZso",
   };
+
+  const videoId = data.trailer.split("v=")[1];
+  const embedUrl = `https://www.youtube.com/embed/${videoId}`;
 
   return (
     <section className="flex flex-col gap-6 w-11/12 sm:w-10/12 max-w-[1200px] my-8">
@@ -86,7 +80,14 @@ export default function FilmDetails({ params }: FilmDetailsProps) {
         <h1 className="text-center text-3xl text-cente font-bold text-primary">
           TRAILER
         </h1>
-        {data.trailer}
+        <iframe
+          className="w-full h-[300px] md:h-[500px] rounded-lg shadow-card"
+          src={embedUrl}
+          title="YouTube video player"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          referrerPolicy="strict-origin-when-cross-origin"
+          allowFullScreen
+        ></iframe>
       </div>
     </section>
   );

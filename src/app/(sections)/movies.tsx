@@ -1,15 +1,35 @@
 "use client";
 
 /* eslint-disable @next/next/no-img-element */
-import React from "react";
+import React, { useEffect, useState } from "react";
 import SectionContainer from "../../containers/sectionContainer";
 import { useRouter } from "next/navigation";
+import FilmRepositories from "@/services/repositories/FilmRepositorie";
+import { FilmProps } from "@/types/Types";
+import Image from "next/image";
 
 export default function Movies() {
+  const [data, setData] = useState<FilmProps[] | undefined>(undefined);
+  const [containerWidth, setContainerWidth] = useState(1000);
   const router = useRouter();
-  const data = [
+
+  useEffect(() => {
+    async function fetchFilms() {
+      try {
+        const films = await FilmRepositories.getFilms();
+        setData(films);
+        setContainerWidth(350 * films.length + 48 * films.length);
+      } catch (error) {
+        console.error("Erro ao carregar filmes", error);
+      }
+    }
+
+    fetchFilms();
+  }, []);
+
+  const dataTest = [
     {
-      id: "1234",
+      id: "66d0b6ab03ab50bf96429978",
       title: "HAROLD E O LÁPIS MÁGICO LÁ (DUB)",
       showtime: "18h00",
       image: "images/image_21.png",
@@ -85,9 +105,6 @@ export default function Movies() {
     },
   ];
 
-  const containerWidth = 350 * data.length + 48 * data.length;
-  console.log(containerWidth);
-
   return (
     <SectionContainer
       title="EM CARTAZ"
@@ -97,7 +114,7 @@ export default function Movies() {
         className={`flex justify-around w-full gap-8 flex-wrap`}
         style={{ maxWidth: containerWidth }}
       >
-        {data.map(({ id, title, showtime, image, classification }, index) => (
+        {data?.map(({ id, title, showtime, image, classification }, index) => (
           <div
             onClick={() => router.push(`/film/${id}`)}
             key={index}
@@ -114,10 +131,12 @@ export default function Movies() {
             <div className="flex flex-col relative gap-1 p-3 border-gray rounded-b-lg">
               <div className="flex justify-between gap-1">
                 <p className="text-sm font-bold">{title}</p>
-                <img
-                  className="w-8 h-8 "
-                  src={`/images/classificacao-${classification}.png`}
-                  alt="movie classification"
+                <Image
+                  src={`/images/classificacao-12.png`}
+                  // src={`/images/classificacao-${classification}.png`}
+                  width={32}
+                  height={32}
+                  alt="classification"
                 />
               </div>
               <p className="text-sm">
