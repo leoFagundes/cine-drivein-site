@@ -1,6 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
 import SectionContainer from "../../containers/sectionContainer";
+import Image from "next/image";
+import location from "../../../public/images/loc.png";
 
 export default function DriveinLocation() {
   return (
@@ -15,10 +17,16 @@ export default function DriveinLocation() {
           rel="noopener noreferrer"
           className="w-11/12 sm:w-10/12 max-w-[1200px] h-[300px] rounded-lg  shadow-md relative overflow-hidden"
         >
+          {/* <Image
+            src={location.src}
+            layout="fill"
+            className="w-full h-full bg-center hover:cursor-pointer rounded-lg bg-cover bg-no-repeat transition-transform duration-300 ease-in-out transform hover:scale-110"
+            alt="location"
+          /> */}
           <div
             className="w-full h-full bg-center hover:cursor-pointer rounded-lg bg-cover bg-no-repeat transition-transform duration-300 ease-in-out transform hover:scale-110"
             style={{
-              backgroundImage: "url(images/loc.png)",
+              backgroundImage: `url(${location.src})`,
             }}
           />
         </a>

@@ -12,9 +12,11 @@ import {
   IoInformationCircleOutline,
   IoFilmOutline,
 } from "react-icons/io5";
+import { useRouter } from "next/navigation";
 
 export default function Header() {
   const [opened, setOpened] = useState(false);
+  const router = useRouter();
 
   const items = [
     {

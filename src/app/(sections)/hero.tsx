@@ -1,4 +1,6 @@
+import Image from "next/image";
 import React from "react";
+import cineDrivein from "../../../public/svg/bg-cinedrivein.svg";
 
 export default function Hero() {
   return (
@@ -14,12 +16,20 @@ export default function Hero() {
           Projeto de lei Nº 1.608/2013
         </span>
       </div>
-      <div
+      <Image
+        className="lg:block hidden w-[700px] h-full bg-center drop-shadow-lg rounded-lg"
+        src={cineDrivein.src}
+        width={700}
+        height={500}
+        alt="teste"
+      />
+      {/* <div
         className="lg:block hidden w-[700px] h-full bg-center drop-shadow-lg rounded-lg bg-contain bg-no-repeat"
         style={{
-          backgroundImage: "url(svg/bg-cinedrivein.svg)",
+          backgroundImage: `url(svg/bg-cinedrivein.svg)`,
         }}
-      />
+      /> */}
+      {/* <Image src={ticket.src} width={500} height={500} alt="teste" /> */}
     </section>
   );
 }

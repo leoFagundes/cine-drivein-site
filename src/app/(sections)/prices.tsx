@@ -1,5 +1,7 @@
+import Image from "next/image";
 import SectionContainer from "../../containers/sectionContainer";
 import { FaCircleInfo } from "react-icons/fa6";
+import ticket from "../../../public/images/ticket.png";
 
 export default function Prices() {
   return (
@@ -11,7 +13,7 @@ export default function Prices() {
       <div className="flex items-center gap-4 relative w-screen h-full">
         <div
           style={{
-            backgroundImage: `url(images/ticket.png)`,
+            backgroundImage: `url(${ticket.src})`,
             backgroundSize: "cover",
             backgroundPosition: "100%",
             width: "100%",
@@ -46,7 +48,7 @@ export default function Prices() {
             <div className="flex flex-col sm:flex-row gap-2 max-w-80">
               <FaCircleInfo className="min-w-6" color="#0088C2" size="20px" />
               <p className="flex gap-2 font-semibold">
-                A bilheteira abre às 17h30 e o cinema está aberto até às 00h00.
+                A bilheteira abre às 17h30 e o cinema está aberto até às 23h30.
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-2 max-w-80">

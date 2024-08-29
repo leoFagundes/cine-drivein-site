@@ -1,5 +1,5 @@
 export interface FilmProps {
-  id: string;
+  _id: string;
   title: string;
   showtime: string;
   image: string;

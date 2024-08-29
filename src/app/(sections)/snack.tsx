@@ -5,6 +5,7 @@ import { useState } from "react";
 import SectionContainer from "../../containers/sectionContainer";
 import Modal from "@/components/modal";
 import Link from "next/link";
+import ticket from "../../../public/images/ticket.png";
 
 export default function Snack() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -24,8 +25,8 @@ export default function Snack() {
             <p>
               <span className="font-bold">Horário de Funcionamento:</span>{" "}
               <br /> Estamos abertos das{" "}
-              <span className="text-primary">XX:XX</span> às{" "}
-              <span className="text-primary">XX:XX</span>
+              <span className="text-primary">18:00</span> às{" "}
+              <span className="text-primary">23:00</span>
             </p>
             <br />
             <p>
@@ -72,7 +73,7 @@ export default function Snack() {
         </div>
         <div
           style={{
-            backgroundImage: `url(images/ticket.png)`,
+            backgroundImage: `url(${ticket.src})`,
             backgroundSize: "cover",
             backgroundPosition: "0%",
             width: "100%",
