@@ -39,9 +39,12 @@ export default function Movies() {
         {data.map(({ title, showtime, image, classification }, index) => (
           <div
             key={index}
-            className="w-[350px] sm:hover:opacity-85 hover:cursor-pointer duration-200 hover:"
+            className="w-[350px] group sm:hover:contrast-[1.1] hover:cursor-pointer duration-200 hover:"
           >
-            <img src={image} alt={title} className="rounded-lg shadow-md" />
+            <div className="relative ">
+              <img src={image} alt={title} className="rounded-lg shadow-md" />
+              <div className="justify-center items-center hidden group-hover:flex group-hover:animate-fadeIn absolute bg-circular-gradient bottom-0 h-full w-full" />
+            </div>
             <div className="flex flex-col relative gap-1 p-3 border-gray rounded-b-lg">
               <div className="flex justify-between gap-1">
                 <p className="text-sm font-bold">{title}</p>
