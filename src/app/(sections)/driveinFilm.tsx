@@ -1,3 +1,5 @@
+/* eslint-disable @next/next/no-img-element */
+
 "use client";
 
 import React, { useState } from "react";
@@ -39,7 +41,7 @@ export default function DriveinFilm() {
         </p>
       </div>
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <img className="h-full" src="images/history.png" alt="menu" />
+        <img className="h-full" src="/images/history.png" alt="menu" />
       </Modal>
     </SectionContainer>
   );

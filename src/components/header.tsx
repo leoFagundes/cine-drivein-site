@@ -59,7 +59,7 @@ export default function Header() {
     <nav className="relative flex items-center justify-between h-20 my-4 w-11/12 sm:w-10/12 max-w-[1200px]">
       <Link href={"/"}>
         {" "}
-        <Image src={"svg/logo.svg"} width={120} height={60} alt="logo" />
+        <Image src={"/svg/logo.svg"} width={120} height={60} alt="logo" />
       </Link>
 
       <ul className="items-center gap-7 font-semibold text-xs hidden lg:flex">

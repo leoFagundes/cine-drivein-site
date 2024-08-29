@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function HowItWorks() {
   const items = [
     {
@@ -56,8 +58,14 @@ export default function HowItWorks() {
           Nosso cardápio variado é distribuído na entrada do cinema e oferece
           desde snacks rápidos até lanches completas. Para fazer seu pedido,
           basta acessar o site{" "}
-          <span className="text-primary">https://app.cinedrivein.com</span>. E
-          lembre-se: ao final do filme, deposite o lixo no saco plástico
+          <Link
+            target="_blank"
+            className="text-primary hover:underline"
+            href={"https://app.cinedrivein.com"}
+          >
+            https://app.cinedrivein.com
+          </Link>
+          . E lembre-se: ao final do filme, deposite o lixo no saco plástico
           fornecido e deixe-o nos tonéis localizados na saída do cinema.
         </>
       ),

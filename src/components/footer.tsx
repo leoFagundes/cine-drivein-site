@@ -10,7 +10,7 @@ export default function Footer() {
 
       <div className="flex flex-col sm:flex-row items-center justify-center gap-4 md:justify-around flex-wrap">
         <div className="flex flex-col items-center sm:items-start gap-2 w-52">
-          <Image src={"svg/logo.svg"} width={120} height={60} alt="logo" />
+          <Image src={"/svg/logo.svg"} width={120} height={60} alt="logo" />
           <span className="font-semibold text-sm sm:text-start text-center">
             O único cinema drive-in da América Latina
           </span>

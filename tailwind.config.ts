@@ -17,7 +17,13 @@ const config: Config = {
       },
       backgroundImage: {
         "circular-gradient":
-          "radial-gradient(circle, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.3) 50%, rgba(0, 0, 0, 0.3) 100%)",
+          "radial-gradient(circle, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.3) 70%)",
+      },
+      boxShadow: {
+        card: "2px 2px 8px rgba(0, 0, 0, 0.6)",
+      },
+      dropShadow: {
+        card: "0 4px 50px rgba(0, 0, 0, 0.1)",
       },
       screens: {
         sm: "640px",

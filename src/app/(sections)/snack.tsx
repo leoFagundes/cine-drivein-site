@@ -4,6 +4,7 @@ import { useState } from "react";
 /* eslint-disable @next/next/no-img-element */
 import SectionContainer from "../../containers/sectionContainer";
 import Modal from "@/components/modal";
+import Link from "next/link";
 
 export default function Snack() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -17,7 +18,7 @@ export default function Snack() {
               Bem-vindo à nossa lanchonete! Aproveite nossos lanches enquanto
               curte um bom filme. Estamos prontos para atender você com
               deliciosas opções de lanches e lanches vegetarianos, porções,
-              bomboniere, bebidas e sobremesas.
+              bomboniere, bebidas e salgadinhos.
             </p>
             <br />
             <p>
@@ -36,9 +37,13 @@ export default function Snack() {
             <br />
             <p>
               Acesse{" "}
-              <span className="text-primary underline">
+              <Link
+                target="_blank"
+                className="text-primary hover:underline"
+                href={"https://app.cinedrivein.com"}
+              >
                 https://app.cinedrivein.com
-              </span>{" "}
+              </Link>{" "}
               para conferir nosso cardápio completo e fazer seu pedido.
             </p>
             <br />
@@ -49,11 +54,11 @@ export default function Snack() {
               <img
                 onClick={() => setIsModalOpen(true)}
                 className="h-16 hover:cursor-pointer"
-                src="svg/menu-icon.svg"
+                src="/svg/menu-icon.svg"
                 alt="menu"
               />
               <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-                <img className="h-full" src="images/menu.png" alt="menu" />
+                <img className="h-full" src="/images/menu.png" alt="menu" />
               </Modal>
             </div>
           </div>
