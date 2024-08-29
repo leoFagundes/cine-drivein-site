@@ -1,7 +1,12 @@
-import React from "react";
-import SectionContainer from "../containers/sectionContainer";
+"use client";
+
+import React, { useState } from "react";
+import SectionContainer from "../../containers/sectionContainer";
+import Modal from "@/components/modal";
 
 export default function DriveinFilm() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
     <SectionContainer
       title="O ÚLTIMO CINE DRIVE-IN"
@@ -25,7 +30,17 @@ export default function DriveinFilm() {
           Marlombrando e a ameaça de demolição do Drive-in, trará um novo rumo
           para suas vidas.
         </p>
+
+        <p
+          onClick={() => setIsModalOpen(true)}
+          className="font-semibold text-primary self-start underline hover:cursor-pointer"
+        >
+          Conheça um pouco mais da nossa história!
+        </p>
       </div>
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <img className="h-full" src="images/history.png" alt="menu" />
+      </Modal>
     </SectionContainer>
   );
 }

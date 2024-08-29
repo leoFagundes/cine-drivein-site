@@ -1,9 +1,13 @@
 "use client";
 
+import { useState } from "react";
 /* eslint-disable @next/next/no-img-element */
-import SectionContainer from "../containers/sectionContainer";
+import SectionContainer from "../../containers/sectionContainer";
+import Modal from "@/components/modal";
 
 export default function Snack() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
     <SectionContainer id="snack" title="LANCHONETE" subtitle="Cardápio">
       <div className="flex items-center gap-4 relative w-screen h-full">
@@ -43,10 +47,14 @@ export default function Snack() {
                 Ou Clique no ícone para ver as nossas opções!
               </p>
               <img
+                onClick={() => setIsModalOpen(true)}
                 className="h-16 hover:cursor-pointer"
                 src="svg/menu-icon.svg"
                 alt="menu"
               />
+              <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+                <img className="h-full" src="images/menu.png" alt="menu" />
+              </Modal>
             </div>
           </div>
         </div>

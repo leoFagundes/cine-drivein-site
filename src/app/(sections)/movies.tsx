@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
-import SectionContainer from "../containers/sectionContainer";
+import SectionContainer from "../../containers/sectionContainer";
 
 export default function Movies() {
   const data = [
@@ -8,19 +8,19 @@ export default function Movies() {
       title: "HAROLD E O LÁPIS MÁGICO LÁ (DUB)",
       showtime: "18h00",
       image: "images/image_21.png",
-      classification: "livre",
+      classification: "l",
     },
     {
       title: "HAROLD E O LÁPIS MÁGICO (DUB)",
       showtime: "18h00",
       image: "images/image_19.png",
-      classification: "livre",
+      classification: "12",
     },
     {
       title: "HAROLD E O LÁPIS MÁGICO MÁGICO MÁGICO (DUB)",
       showtime: "18h00",
       image: "images/image_20.png",
-      classification: "livre",
+      classification: "16",
     },
   ];
 

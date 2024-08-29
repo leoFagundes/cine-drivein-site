@@ -1,4 +1,4 @@
-import SectionContainer from "../containers/sectionContainer";
+import SectionContainer from "../../containers/sectionContainer";
 import { FaCircleInfo } from "react-icons/fa6";
 
 export default function Prices() {

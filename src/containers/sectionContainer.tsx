@@ -22,7 +22,7 @@ export default function SectionContainer({
         <h1 className="text-primary text-center text-4xl font-semibold">
           {title}
         </h1>
-        <p className=" text-center font-semibold">{subtitle}</p>
+        <p className="text-center font-semibold">{subtitle}</p>
       </div>
       {children}
     </section>

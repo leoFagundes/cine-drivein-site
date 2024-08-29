@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import React from "react";
-import SectionContainer from "../containers/sectionContainer";
+import SectionContainer from "../../containers/sectionContainer";
 
 export default function DriveinLocation() {
   return (
