@@ -101,8 +101,16 @@ export default function HowItWorks() {
       description: (
         <>
           Caso tenha alguma dúvida ou sugestão, não hesite em{" "}
-          <span className="text-primary">entrar em contato conosco</span>.
-          Estamos aqui para ajudar!
+          <span className="text-primary">entrar em contato conosco</span> pelo
+          email{" "}
+          <Link
+            className="text-primary hover:underline"
+            href="mailto:cinedrivein@cinedrivein.com"
+            target="_blank"
+          >
+            cinedrivein@cinedrivein.com
+          </Link>
+          . Estamos aqui para ajudar!
         </>
       ),
     },

@@ -5,6 +5,9 @@
 import React, { useState } from "react";
 import SectionContainer from "../../containers/sectionContainer";
 import Modal from "@/components/modal";
+import { FaExpand } from "react-icons/fa";
+import { IoMdClose } from "react-icons/io";
+import history from "../../../public/images/history.png";
 
 export default function DriveinFilm() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -41,14 +44,27 @@ export default function DriveinFilm() {
         </p>
       </div>
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <a
-          className="h-full"
-          href="/images/history.png"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img className="h-full" src="/images/history.png" alt="history" />
-        </a>
+        <div
+          onClick={(e) => e.stopPropagation()}
+          className="h-full w-full max-w-[500px] bg-contain bg-no-repeat bg-center"
+          style={{ backgroundImage: `url(${history.src})` }}
+        />
+        <div className="hover:cursor-pointer absolute top-4 right-4 flex items-center gap-4">
+          <a
+            className="h-full"
+            href="/images/history.png"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <FaExpand size={"22px"} className=" text-white" />
+          </a>
+
+          <IoMdClose
+            onClick={() => setIsModalOpen(false)}
+            size={"32px"}
+            className="hover:cursor-pointer drop-shadow-md text-white"
+          />
+        </div>
       </Modal>
     </SectionContainer>
   );

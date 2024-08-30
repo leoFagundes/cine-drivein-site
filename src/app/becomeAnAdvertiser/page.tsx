@@ -88,6 +88,8 @@ export default function BecomeAnAdvertiser() {
         </div>
       </div>
 
+      <hr className="text-primary" />
+
       <div className="flex flex-col gap-6 my-6">
         <h1 className="text-center self-center text-primary font-semibold text-3xl">
           EMPRESAS QUE JÁ ANUNCIARAM
@@ -106,6 +108,8 @@ export default function BecomeAnAdvertiser() {
           <img src={"/images/organizations/wizard.png"} alt={"wizard"} />
         </div>
       </div>
+
+      <hr className="text-primary" />
 
       <div className="flex justify-center flex-wrap-reverse items-center gap-8 my-6">
         <div className="flex flex-col gap-4 max-w-full lg:max-w-[300px]">
@@ -129,6 +133,8 @@ export default function BecomeAnAdvertiser() {
           allowFullScreen
         ></iframe>
       </div>
+
+      <hr className="text-primary" />
 
       <div className="flex flex-col items-center gap-3 my-6">
         <h1 className="text-center self-center text-primary font-semibold text-3xl">
@@ -166,6 +172,8 @@ export default function BecomeAnAdvertiser() {
         </div>
       </div>
 
+      <hr className="text-primary" />
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
         <img className="hidden md:block" src="images/people.png" alt="people" />
         <article className="flex flex-col gap-2">
@@ -193,6 +201,8 @@ export default function BecomeAnAdvertiser() {
           </article>
         </article>
       </div>
+
+      <hr className="text-primary" />
 
       <div className="flex flex-col gap-4">
         <h1 className="text-center self-center text-primary font-semibold text-3xl">

@@ -77,9 +77,12 @@ export default function Header() {
       </ul>
       <div
         onClick={() => setOpened(!opened)}
-        className={classNames(`lg:hidden block tham tham-e-squeeze tham-w-6`, {
-          "tham-active": opened,
-        })}
+        className={classNames(
+          `lg:hidden block tham tham-e-squeeze tham-w-6 scale-110`,
+          {
+            "tham-active": opened,
+          }
+        )}
       >
         <div className="tham-box">
           <div className="tham-inner bg-gray" />

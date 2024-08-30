@@ -6,6 +6,9 @@ import SectionContainer from "../../containers/sectionContainer";
 import Modal from "@/components/modal";
 import Link from "next/link";
 import ticket from "../../../public/images/ticket.png";
+import menu from "../../../public/images/menu.png";
+import { FaExpand } from "react-icons/fa";
+import { IoMdClose } from "react-icons/io";
 
 export default function Snack() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -59,14 +62,27 @@ export default function Snack() {
                 alt="menu"
               />
               <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-                <a
-                  className="h-full"
-                  href="/images/menu.png"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <img className="h-full" src="/images/menu.png" alt="menu" />
-                </a>
+                <div
+                  onClick={(e) => e.stopPropagation()}
+                  className="h-full w-full max-w-[500px] bg-contain bg-no-repeat bg-center"
+                  style={{ backgroundImage: `url(${menu.src})` }}
+                />
+                <div className="hover:cursor-pointer absolute top-4 right-4 flex items-center gap-4">
+                  <a
+                    className="h-full"
+                    href="/images/menu.png"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <FaExpand size={"22px"} className=" text-white" />
+                  </a>
+
+                  <IoMdClose
+                    onClick={() => setIsModalOpen(false)}
+                    size={"32px"}
+                    className="hover:cursor-pointer drop-shadow-md text-white"
+                  />
+                </div>
               </Modal>
             </div>
           </div>

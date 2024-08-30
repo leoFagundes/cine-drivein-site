@@ -4,8 +4,8 @@ import cineDrivein from "../../../public/svg/bg-cinedrivein.svg";
 
 export default function Hero() {
   return (
-    <section className="flex justify-center gap-4 flex-wrap lg:flex-nowrap min-h-[400px] w-11/12 sm:w-10/12 max-w-[1200px] my-20">
-      <div className=" flex flex-col justify-center gap-2 w-[350px]">
+    <section className="flex justify-center sm:gap-4 flex-wrap lg:flex-nowrap sm:min-h-[400px] w-11/12 sm:w-10/12 max-w-[1200px] mb-20 lg:my-20">
+      <div className="hidden lg:flex flex-col justify-center gap-2 w-[350px]">
         <h1 className="text-primary text-center lg:text-start font-bold text-5xl">
           PATRIMÔNIO CULTURAL
         </h1>
@@ -16,13 +16,26 @@ export default function Hero() {
           Projeto de lei Nº 1.608/2013
         </span>
       </div>
-      <Image
-        className="lg:block hidden w-[700px] h-full bg-center drop-shadow-lg rounded-lg"
-        src={cineDrivein.src}
-        width={700}
-        height={500}
-        alt="teste"
-      />
+      <div>
+        <Image
+          className="block w-[700px] h-full bg-center drop-shadow-lg rounded-lg"
+          src={cineDrivein.src}
+          width={700}
+          height={500}
+          alt="teste"
+        />
+        <div className="lg:hidden -mt-3 flex gap-1 flex-col items-center text-center">
+          <div>
+            <p className="font-bold text-primary text-xl">
+              PATRIMÔNIO CULTURAL
+            </p>
+            <p className="text-base italic font-medium">Do Distrito Federal</p>
+          </div>
+          <p className="text-primary text-center text-sm font-semibold italic">
+            Projeto de lei Nº 1.608/2013
+          </p>
+        </div>
+      </div>
       {/* <div
         className="lg:block hidden w-[700px] h-full bg-center drop-shadow-lg rounded-lg bg-contain bg-no-repeat"
         style={{
