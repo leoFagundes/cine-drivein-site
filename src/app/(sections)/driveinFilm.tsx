@@ -56,7 +56,7 @@ export default function DriveinFilm() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <FaExpand size={"22px"} className=" text-white" />
+            <FaExpand size={"22px"} className="text-white drop-shadow-md" />
           </a>
 
           <IoMdClose
