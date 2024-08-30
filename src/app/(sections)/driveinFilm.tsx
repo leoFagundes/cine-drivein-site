@@ -49,7 +49,7 @@ export default function DriveinFilm() {
           className="h-full w-full max-w-[500px] bg-contain bg-no-repeat bg-center"
           style={{ backgroundImage: `url(${history.src})` }}
         />
-        <div className="hover:cursor-pointer absolute top-4 right-4 flex items-center gap-4">
+        <div className="hover:cursor-pointer absolute top-4 right-8 flex items-center gap-4">
           <a
             className="h-full"
             href="/images/history.png"

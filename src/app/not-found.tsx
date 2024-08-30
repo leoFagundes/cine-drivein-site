@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { BiError } from "react-icons/bi";
+import notFoundImage from "../../public/svg/page-not-found.svg";
 
 export default function NotFound() {
   return (
@@ -23,9 +24,9 @@ export default function NotFound() {
         </div>
       </div>
       <Image
-        src={"svg/page-not-found.svg"}
-        width={528}
-        height={472}
+        src={notFoundImage.src}
+        width={600}
+        height={550}
         alt="page-not-found"
         className="scale-110 hidden sm:block"
       />

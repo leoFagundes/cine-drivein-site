@@ -15,3 +15,10 @@ export interface FilmProps {
   trailer: string;
   screening: "Sessão 1" | "Sessão 2" | "Sessão 3";
 }
+
+export type Schedule = {
+  _id: string;
+  isOpen: boolean;
+  closingTime: string;
+  openingTime: string;
+};

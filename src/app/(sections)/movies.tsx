@@ -1,7 +1,7 @@
 "use client";
 
 /* eslint-disable @next/next/no-img-element */
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import SectionContainer from "../../containers/sectionContainer";
 import { useRouter } from "next/navigation";
 import FilmRepositories from "@/services/repositories/FilmRepositorie";
@@ -43,50 +43,47 @@ export default function Movies() {
   }, []);
 
   return (
-    <SectionContainer
-      title="EM CARTAZ"
-      subtitle="Programação de 22 a 28 de Agosto"
-    >
+    <SectionContainer title="EM CARTAZ" subtitle="Confira a programação atual">
       {loading && <Loader />}
 
       <div
         className={`flex justify-around w-full gap-8 flex-wrap`}
         style={{ maxWidth: containerWidth }}
       >
-        {data?.map(
-          (
-            { _id, screening, title, showtime, image, classification },
-            index
-          ) => (
-            <div
-              onClick={() => router.push(`/filmDetail/${_id}`)}
-              key={index}
-              className="w-[350px] group contrast-[1.1] hover:cursor-pointer duration-200"
-            >
-              <div className="relative overflow-hidden rounded-lg shadow-card">
-                <img
-                  src={image}
-                  alt={title}
-                  className="rounded-lg shadow-md sm:group-hover:scale-110 duration-500 "
-                />
-              </div>
-              <div className="flex flex-col relative gap-1 p-3 border-gray rounded-b-lg">
-                <div className="flex justify-between gap-1">
-                  <p className="text-sm font-bold">{title}</p>
-                  <Image
-                    src={`/images/classifications/classificacao-${classification}.png`}
-                    width={32}
-                    height={32}
-                    alt="classification"
+        {data?.map(({ _id, title, showtime, image, classification }, index) => (
+          <Fragment key={index}>
+            {title ? (
+              <div
+                onClick={() => router.push(`/filmDetail/${_id}`)}
+                className="w-[350px] group contrast-[1.1] hover:cursor-pointer duration-200"
+              >
+                <div className="relative overflow-hidden rounded-lg shadow-card">
+                  <img
+                    src={image}
+                    alt={title}
+                    className="rounded-lg shadow-md sm:group-hover:scale-110 duration-500 "
                   />
                 </div>
-                <p className="text-sm">
-                  <span className="font-semibold">Horário:</span> {showtime}
-                </p>
+                <div className="flex flex-col relative gap-1 p-3 border-gray rounded-b-lg">
+                  <div className="flex justify-between gap-1">
+                    <p className="text-sm font-bold">{title}</p>
+                    <Image
+                      src={`/images/classifications/classificacao-${classification}.png`}
+                      width={32}
+                      height={32}
+                      alt="classification"
+                    />
+                  </div>
+                  <p className="text-sm">
+                    <span className="font-semibold">Horário:</span> {showtime}
+                  </p>
+                </div>
               </div>
-            </div>
-          )
-        )}
+            ) : (
+              ""
+            )}
+          </Fragment>
+        ))}
       </div>
     </SectionContainer>
   );
