@@ -65,7 +65,7 @@ export default function Snack() {
               Acesse{" "}
               <Link
                 target="_blank"
-                className="text-primary hover:underline"
+                className="text-primary underline sm:decoration-transparent sm:hover:decoration-inherit sm:hover:underline"
                 href={"https://app.cinedrivein.com"}
               >
                 https://app.cinedrivein.com

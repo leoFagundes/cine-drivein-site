@@ -215,7 +215,7 @@ export default function BecomeAnAdvertiser() {
           entre em contato conosco:
         </p>
         <Link
-          className="font-semibold text-lg text-primary self-center hover:underline"
+          className="font-semibold text-lg text-primary self-center underline sm:decoration-transparent sm:hover:decoration-inherit sm:hover:underline"
           href="mailto:cinedrivein@cinedrivein.com"
           target="_blank"
         >

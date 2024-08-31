@@ -61,7 +61,7 @@ export default function HowItWorks() {
           basta acessar o site{" "}
           <Link
             target="_blank"
-            className="text-primary hover:underline"
+            className="text-primary underline sm:decoration-transparent sm:hover:decoration-inherit sm:hover:underline"
             href={"https://app.cinedrivein.com"}
           >
             https://app.cinedrivein.com
@@ -104,7 +104,7 @@ export default function HowItWorks() {
           <span className="text-primary">entrar em contato conosco</span> pelo
           email{" "}
           <Link
-            className="text-primary hover:underline"
+            className="text-primary underline sm:decoration-transparent sm:hover:decoration-inherit sm:hover:underline"
             href="mailto:cinedrivein@cinedrivein.com"
             target="_blank"
           >
