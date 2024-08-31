@@ -68,13 +68,6 @@ export default function Prices() {
                 A bilheteira abre às 17h30 e o cinema está aberto até às 23h30.
               </p>
             </div>
-            <div className="flex flex-col sm:flex-row gap-2 max-w-80">
-              <FaCircleInfo className="min-w-6" color="#0088C2" size="20px" />
-              <p className="flex gap-2 font-semibold">
-                Garanta seu ingresso e aproveite uma noite cheia de cinema! Um
-                bilhete é válido para todos os filmes exibidos.
-              </p>
-            </div>
           </article>
         </div>
       </div>
