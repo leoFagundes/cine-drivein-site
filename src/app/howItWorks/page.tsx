@@ -40,13 +40,15 @@ export default function HowItWorks() {
       ),
     },
     {
-      title: "Como escuto o filme?",
+      title: "Como faço para escutar o filme?",
       description: (
         <>
           Ao começar o filme, basta sintonizar o rádio do seu carro na
           frequência <span className="text-primary">FM 88,7</span> para ouvir o
           som direto da cabine de projeção, com qualidade estéreo. Ajuste o
-          volume ao seu gosto e aproveite a experiência completa.
+          volume ao seu gosto e aproveite a experiência completa. Caso seu carro
+          não tenha rádio, temos duas caixas de som externas disponíveis na
+          lateral da nossa lanchonete.
         </>
       ),
     },
@@ -55,7 +57,7 @@ export default function HowItWorks() {
       description: (
         <>
           Nosso cardápio variado é distribuído na entrada do cinema e oferece
-          desde snacks rápidos até lanches completas. Para fazer seu pedido,
+          desde snacks rápidos até lanches completos. Para fazer seu pedido,
           basta acessar o site{" "}
           <Link
             target="_blank"
@@ -64,8 +66,8 @@ export default function HowItWorks() {
           >
             https://app.cinedrivein.com
           </Link>
-          . E lembre-se: ao final do filme, deposite o lixo no saco plástico
-          fornecido e deixe-o nos tonéis localizados na saída do cinema.
+          . E lembre-se: ao final do filme, deposite o seu lixo nos tonéis
+          localizados na saída do cinema.
         </>
       ),
     },

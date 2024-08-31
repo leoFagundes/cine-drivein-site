@@ -8,9 +8,9 @@ import {
   IoHomeOutline,
   IoPricetagsOutline,
   IoFastFoodOutline,
-  IoAt,
   IoInformationCircleOutline,
   IoFilmOutline,
+  IoLocationOutline,
 } from "react-icons/io5";
 import { useRouter } from "next/navigation";
 
@@ -38,10 +38,10 @@ export default function Header() {
       icon: <IoFastFoodOutline size={"16px"} />,
     },
     {
-      key: "contact",
-      label: "CONTATO",
-      link: "/#contact",
-      icon: <IoAt size={"16px"} />,
+      key: "location",
+      label: "LOCALIZAÇÃO",
+      link: "/#location",
+      icon: <IoLocationOutline size={"16px"} />,
     },
     {
       key: "how-it-works",
@@ -78,7 +78,7 @@ export default function Header() {
       <div
         onClick={() => setOpened(!opened)}
         className={classNames(
-          `lg:hidden block tham tham-e-squeeze tham-w-6 scale-110`,
+          `lg:hidden block tham tham-e-squeeze tham-w-6 scale-110 hover:opacity-100 md:hover:opacity-80`,
           {
             "tham-active": opened,
           }

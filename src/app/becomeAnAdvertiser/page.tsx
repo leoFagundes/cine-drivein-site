@@ -20,7 +20,7 @@ export default function BecomeAnAdvertiser() {
       </div>
 
       <img
-        className="shadow-card"
+        className="shadow-card rounded-lg contrast-[1.1] brightness-110 saturate-[1.1]"
         src={"/images/cine-drivein.png"}
         alt={"Cine Drive-in"}
       />

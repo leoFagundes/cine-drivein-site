@@ -7,6 +7,7 @@ import location from "../../../public/images/loc.png";
 export default function DriveinLocation() {
   return (
     <SectionContainer
+      id="location"
       title="LOCALIZAÇÃO"
       subtitle="Área Especial do Autódromo • Asa Norte • Brasília"
     >

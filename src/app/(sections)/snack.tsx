@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 /* eslint-disable @next/next/no-img-element */
 import SectionContainer from "../../containers/sectionContainer";
 import Modal from "@/components/modal";
@@ -9,9 +9,31 @@ import ticket from "../../../public/images/ticket.png";
 import menu from "../../../public/images/menu.png";
 import { FaExpand } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
+import ScheduleRepositories from "@/services/repositories/ScheduleRepositories";
+import { Schedule } from "@/types/Types";
 
 export default function Snack() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [schedule, setSchedule] = useState<Partial<Schedule>>({
+    closingTime: "18:00",
+    openingTime: "23:00",
+  });
+
+  useEffect(() => {
+    async function fecthSchedule() {
+      try {
+        const newSchedule = await ScheduleRepositories.getSchedule();
+        setSchedule({
+          closingTime: newSchedule.closingTime,
+          openingTime: newSchedule.openingTime,
+        });
+      } catch (error) {
+        console.error("Não foi possível carregar o schedule: ", error);
+      }
+    }
+
+    fecthSchedule();
+  }, []);
 
   return (
     <SectionContainer id="snack" title="LANCHONETE" subtitle="Cardápio">
@@ -28,8 +50,8 @@ export default function Snack() {
             <p>
               <span className="font-bold">Horário de Funcionamento:</span>{" "}
               <br /> Estamos abertos das{" "}
-              <span className="text-primary">18:00</span> às{" "}
-              <span className="text-primary">23:00</span>
+              <span className="text-primary">{schedule.openingTime}</span> às{" "}
+              <span className="text-primary">{schedule.closingTime}</span>
             </p>
             <br />
             <p>
@@ -67,14 +89,17 @@ export default function Snack() {
                   className="h-full w-full max-w-[500px] bg-contain bg-no-repeat bg-center"
                   style={{ backgroundImage: `url(${menu.src})` }}
                 />
-                <div className="hover:cursor-pointer absolute top-4 right-4 flex items-center gap-4">
+                <div className="hover:cursor-pointer absolute top-4 right-8 flex items-center gap-4">
                   <a
                     className="h-full"
                     href="/images/menu.png"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <FaExpand size={"22px"} className=" text-white" />
+                    <FaExpand
+                      size={"22px"}
+                      className="text-white drop-shadow-md"
+                    />
                   </a>
 
                   <IoMdClose
