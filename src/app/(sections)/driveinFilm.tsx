@@ -38,7 +38,7 @@ export default function DriveinFilm() {
 
         <p
           onClick={() => setIsModalOpen(true)}
-          className="font-semibold text-primary self-start underline hover:cursor-pointer"
+          className="font-semibold text-primary self-start hover:cursor-pointer underline sm:decoration-transparent sm:hover:decoration-inherit sm:hover:underline"
         >
           Conheça um pouco mais da nossa história!
         </p>
