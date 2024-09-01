@@ -63,9 +63,9 @@ export default function Movies() {
             </h3>
           </div>
           <div className="flex items-center gap-1">
-            <IoReload className="text-primary" size={"20px"} />
+            <IoReload className="text-orange-700" size={"20px"} />
             <p
-              className="text-primary cursor-pointer text-lg font-semibold underline sm:decoration-transparent sm:hover:decoration-inherit sm:hover:underline"
+              className="text-orange-700 cursor-pointer text-lg font-semibold underline sm:decoration-transparent sm:hover:decoration-inherit sm:hover:underline"
               onClick={handleReload}
             >
               Tente novamente
