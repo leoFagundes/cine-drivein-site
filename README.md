@@ -1,6 +1,8 @@
 <h1 align="center">Cine Drive-in - Site Oficial</h1>
 
-<img style="border-radius: 50%;" src="/public/svg/bg-cinedrivein.svg" width="100px;" alt="cinedrivein-img"/>
+<p align="center">
+  <img src="/public/svg/bg-cinedrivein.svg" style="border-radius: 50%;" alt="cinedrivein-img"/>
+</p>
 
 ## Descrição do Projeto
 
