@@ -46,13 +46,13 @@ export default function Header() {
     {
       key: "how-it-works",
       label: "COMO FUNCIONA",
-      link: "/howItWorks",
+      link: "/info",
       icon: <IoInformationCircleOutline size={"16px"} />,
     },
     {
       key: "advertiser",
       label: "SEJA UM ANUNCIANTE",
-      link: "/becomeAnAdvertiser",
+      link: "/advertiser",
       icon: <IoFilmOutline size={"16px"} />,
     },
   ];

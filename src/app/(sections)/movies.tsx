@@ -87,7 +87,7 @@ export default function Movies() {
           <Fragment key={index}>
             {title ? (
               <div
-                onClick={() => router.push(`/filmDetail/${_id}`)}
+                onClick={() => router.push(`/film/${_id}/detail`)}
                 className="w-[350px] group contrast-[1.1] hover:cursor-pointer duration-200"
               >
                 <div className="relative overflow-hidden rounded-lg shadow-card">
