@@ -15,8 +15,8 @@ import { Schedule } from "@/types/Types";
 export default function Snack() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [schedule, setSchedule] = useState<Partial<Schedule>>({
-    closingTime: "18:00",
-    openingTime: "23:00",
+    closingTime: "23:00",
+    openingTime: "18:00",
   });
 
   useEffect(() => {

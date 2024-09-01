@@ -8,39 +8,72 @@ import FilmRepositories from "@/services/repositories/FilmRepositorie";
 import { FilmProps } from "@/types/Types";
 import Image from "next/image";
 import Loader from "@/components/loader";
+import { IoWarning, IoReload } from "react-icons/io5";
 
 export default function Movies() {
   const [data, setData] = useState<FilmProps[] | undefined>(undefined);
   const [containerWidth, setContainerWidth] = useState(1000);
   const [loading, setLoading] = useState(false);
+  const [loadError, setLoadError] = useState(false);
   const router = useRouter();
 
-  useEffect(() => {
-    async function fetchFilms() {
-      setLoading(true);
-      try {
-        const films = await FilmRepositories.getFilms();
+  async function fetchFilms() {
+    setLoading(true);
+    setLoadError(false);
+    try {
+      const films = await FilmRepositories.getFilms();
 
-        // Ordena os filmes pela ordem das sessões
-        const sortedFilms = films.sort((a: any, b: any) => {
-          const sessionOrder = ["Sessão 1", "Sessão 2", "Sessão 3"];
-          return (
-            sessionOrder.indexOf(a.screening) -
-            sessionOrder.indexOf(b.screening)
-          );
-        });
+      // Ordena os filmes pela ordem das sessões
+      const sortedFilms = films.sort((a: any, b: any) => {
+        const sessionOrder = ["Sessão 1", "Sessão 2", "Sessão 3"];
+        return (
+          sessionOrder.indexOf(a.screening) - sessionOrder.indexOf(b.screening)
+        );
+      });
 
-        setData(sortedFilms);
-        setContainerWidth(350 * sortedFilms.length + 48 * sortedFilms.length);
-      } catch (error) {
-        console.error("Erro ao carregar filmes", error);
-      } finally {
-        setLoading(false);
-      }
+      setData(sortedFilms);
+      setContainerWidth(350 * sortedFilms.length + 48 * sortedFilms.length);
+    } catch (error) {
+      console.error("Erro ao carregar filmes", error);
+      setLoadError(true);
+    } finally {
+      setLoading(false);
     }
+  }
 
+  useEffect(() => {
     fetchFilms();
   }, []);
+
+  function handleReload() {
+    fetchFilms();
+  }
+
+  if (loadError)
+    return (
+      <SectionContainer
+        title="EM CARTAZ"
+        subtitle="Confira a programação atual"
+      >
+        <div className="flex flex-col items-center gap-1">
+          <div className="flex items-center gap-1">
+            <IoWarning className="text-orange-700" size={"20px"} />
+            <h3 className="font-semibold text-lg text-orange-700">
+              Ops, parece que tivemos um erro ao carregar os filmes...
+            </h3>
+          </div>
+          <div className="flex items-center gap-1">
+            <IoReload className="text-primary" size={"20px"} />
+            <p
+              className="text-primary cursor-pointer text-lg font-semibold underline sm:decoration-transparent sm:hover:decoration-inherit sm:hover:underline"
+              onClick={handleReload}
+            >
+              Tente novamente
+            </p>
+          </div>
+        </div>
+      </SectionContainer>
+    );
 
   return (
     <SectionContainer title="EM CARTAZ" subtitle="Confira a programação atual">
