@@ -100,12 +100,14 @@ export default function Movies() {
                 <div className="flex flex-col relative gap-1 p-3 border-gray rounded-b-lg">
                   <div className="flex justify-between gap-1">
                     <p className="text-sm font-bold">{title}</p>
-                    <Image
-                      src={`/images/classifications/classificacao-${classification}.png`}
-                      width={32}
-                      height={32}
-                      alt="classification"
-                    />
+                    <div className="min-w-8 min-h-8">
+                      <Image
+                        src={`/images/classifications/classificacao-${classification}.png`}
+                        width={32}
+                        height={32}
+                        alt="classification"
+                      />
+                    </div>
                   </div>
                   <p className="text-sm">
                     <span className="font-semibold">Horário:</span> {showtime}
