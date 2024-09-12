@@ -1,48 +1,13 @@
-"use client";
-
 /* eslint-disable @next/next/no-img-element */
-import Loader from "@/components/loader";
-import FilmRepositories from "@/services/repositories/FilmRepositorie";
-import { FilmProps } from "@/types/Types";
-import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
 
-interface FilmDetailsProps {
-  searchParams: {
-    q: string;
-  };
+import { FilmProps } from "@/types/Types";
+import React from "react";
+
+interface FilmLayoutProps {
+  data: FilmProps | undefined;
 }
 
-export default function FilmDetails({ searchParams }: FilmDetailsProps) {
-  const [data, setData] = useState<FilmProps | undefined>(undefined);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    async function fetchFilms() {
-      setLoading(true);
-      try {
-        const films = await FilmRepositories.getFilmById(searchParams.q);
-        const videoId = films.trailer.split("v=")[1];
-        const embedUrl = `https://www.youtube.com/embed/${videoId}`;
-
-        setData({ ...films, trailer: embedUrl });
-      } catch (error) {
-        console.error("Erro ao carregar filmes", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchFilms();
-  }, []);
-
-  if (loading)
-    return (
-      <div className="flex justify-center items-center top-0 left-0 fixed h-screen w-screen bg-primary">
-        <Loader />
-      </div>
-    );
-
+export default function FilmLayout({ data }: FilmLayoutProps) {
   return (
     <section className="flex flex-col gap-6 w-11/12 sm:w-10/12 max-w-[1200px] my-8">
       <div className="flex gap-6 justify-center md:justify-start md:flex-nowrap flex-wrap">

@@ -1,5 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 
+import Popup from "@/components/popup";
 import DriveinFilm from "./(sections)/driveinFilm";
 import DriveinLocation from "./(sections)/driveinLocation";
 import Hero from "./(sections)/hero";
@@ -27,6 +28,7 @@ export default function Home() {
           alt="roll"
         />
       </div>
+      <Popup />
       <Hero />
       <Movies />
       <Prices />

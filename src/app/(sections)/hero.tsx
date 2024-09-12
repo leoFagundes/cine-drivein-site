@@ -1,8 +1,24 @@
+"use client";
+
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import cineDrivein from "../../../public/svg/bg-cinedrivein.svg";
+import cineDriveinNatal from "../../../public/images/bg-cinedrivein-natal.png";
+import cineDriveinHalloween from "../../../public/images/bg-cinedrivein-halloween.png";
 
 export default function Hero() {
+  const [isEvent, setIsEvent] = useState({
+    default: true,
+    christmas: false,
+    halloween: false,
+  });
+
+  const background = isEvent.default
+    ? cineDrivein.src
+    : isEvent.christmas
+    ? cineDriveinNatal.src
+    : cineDriveinHalloween.src;
+
   return (
     <section className="flex justify-center sm:gap-4 flex-wrap lg:flex-nowrap sm:min-h-[400px] w-11/12 sm:w-10/12 max-w-[1200px] mb-20 lg:my-20">
       <div className="hidden lg:flex flex-col justify-center gap-2 w-[350px]">
@@ -19,7 +35,7 @@ export default function Hero() {
       <div>
         <Image
           className="block w-[700px] h-full bg-center drop-shadow-lg rounded-lg"
-          src={cineDrivein.src}
+          src={background}
           width={700}
           height={500}
           alt="teste"

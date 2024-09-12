@@ -9,12 +9,15 @@ import { FilmProps } from "@/types/Types";
 import Image from "next/image";
 import Loader from "@/components/loader";
 import { IoWarning, IoReload } from "react-icons/io5";
+import { BiError } from "react-icons/bi";
 
 export default function Movies() {
   const [data, setData] = useState<FilmProps[] | undefined>(undefined);
   const [containerWidth, setContainerWidth] = useState(1000);
   const [loading, setLoading] = useState(false);
   const [loadError, setLoadError] = useState(false);
+  const [isClosedToday, setIsClosedToday] = useState(false);
+  const [isWarnClosedOpen, setIsWarnClosedOpen] = useState(false);
   const router = useRouter();
 
   async function fetchFilms() {
@@ -33,6 +36,9 @@ export default function Movies() {
 
       setData(sortedFilms);
       setContainerWidth(350 * sortedFilms.length + 48 * sortedFilms.length);
+
+      // setIsClosedToday(true);
+      // setIsWarnClosedOpen(true);
     } catch (error) {
       console.error("Erro ao carregar filmes", error);
       setLoadError(true);
@@ -76,8 +82,42 @@ export default function Movies() {
     );
 
   return (
-    <SectionContainer title="EM CARTAZ" subtitle="Confira a programação atual">
+    <SectionContainer
+      title="EM CARTAZ"
+      subtitle={`${
+        isClosedToday ? "Hoje estamos fechados!" : "Confira a programação atual"
+      }`}
+    >
       {loading && <Loader />}
+      {isWarnClosedOpen && (
+        <div
+          onClick={() => setIsWarnClosedOpen(false)}
+          className="absolute flex hover:cursor-pointer justify-center items-start md:items-center w-full h-full bg-gray/50 z-20 p-8"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative w-[450px] h-[300px] shadow-card bg-primary rounded-lg p-3 hover:cursor-default"
+          >
+            <div className="absolute top-0 left-0 flex items-center justify-center h-full w-full rounded-lg">
+              <BiError className="text-gray/20 scale-[16]" />
+            </div>
+            <div className="flex justify-center items-center flex-col gap-2 z-10 rounded-lg backdrop-blur-[2px] h-full w-full">
+              <h2 className="font-bold text-3xl text-center text-primary">
+                AVISO
+              </h2>
+              <h2 className="font-semibold text-2xl text-center">
+                Hoje o Cine Drive-in estará fechado
+              </h2>
+              <h2
+                onClick={() => setIsWarnClosedOpen(false)}
+                className="font-semibold text-primary text-xl underline hover:cursor-pointer"
+              >
+                Ver filmes em cartaz
+              </h2>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div
         className={`flex justify-around w-full gap-8 flex-wrap`}
