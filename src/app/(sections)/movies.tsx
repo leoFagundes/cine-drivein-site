@@ -28,7 +28,7 @@ export default function Movies() {
 
       // Ordena os filmes pela ordem das sessões
       const sortedFilms = films.sort((a: any, b: any) => {
-        const sessionOrder = ["Sessão 1", "Sessão 2", "Sessão 3"];
+        const sessionOrder = ["Sessão 1", "Sessão 2", "Sessão 3", "Sessão 4"];
         return (
           sessionOrder.indexOf(a.screening) - sessionOrder.indexOf(b.screening)
         );
@@ -140,6 +140,9 @@ export default function Movies() {
                     }
                     if (screening === "Sessão 3") {
                       router.push(`/film/detail/screening3`);
+                    }
+                    if (screening === "Sessão 4") {
+                      router.push(`/film/detail/screening4`);
                     }
                   }}
                   className="w-[350px] group contrast-[1.1] hover:cursor-pointer duration-200"

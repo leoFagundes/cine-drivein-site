@@ -25,37 +25,61 @@ export default function FilmLayout({ data }: FilmLayoutProps) {
           <p className="font-semibold text-xl">Sinopse</p>
           <p className="text-sm lg:text-base">{data?.synopsis}</p>
           <div>
-            <p>
-              <span className="font-semibold">Roteiro:</span>{" "}
-              {data?.writer.join(", ")}
-            </p>
-            <p>
-              <span className="font-semibold">Elenco:</span>{" "}
-              {data?.cast.join(", ")}
-            </p>
-            <p>
-              <span className="font-semibold">Gênero:</span>{" "}
-              {data?.genres.join(", ")}
-            </p>
-            <p>
-              <span className="font-semibold">Duração:</span> {data?.duration}
-            </p>
-            <p>
-              <span className="font-semibold">Idioma:</span> {data?.language}
-            </p>
-            <p>
-              <span className="font-semibold">Horários:</span> {data?.showtime}
-            </p>
-            <p>
-              <span className="font-semibold">Data de Exibição:</span>{" "}
-              {data?.displayDate}
-            </p>
-            <p>
-              <span className="font-semibold">Classificação:</span>{" "}
-              {data?.classification.toLowerCase() === "l"
-                ? "Livre"
-                : data?.classification}
-            </p>
+            {data?.writer && data?.writer.length > 0 && (
+              <p>
+                <span className="font-semibold">Roteiro:</span>{" "}
+                {data?.writer.join(", ")}
+              </p>
+            )}
+
+            {data?.cast && data?.cast.length > 0 && (
+              <p>
+                <span className="font-semibold">Elenco:</span>{" "}
+                {data?.cast.join(", ")}
+              </p>
+            )}
+
+            {data?.genres && data?.genres.length > 0 && (
+              <p>
+                <span className="font-semibold">Gênero:</span>{" "}
+                {data?.genres.join(", ")}
+              </p>
+            )}
+
+            {data?.duration && (
+              <p>
+                <span className="font-semibold">Duração:</span> {data?.duration}
+              </p>
+            )}
+
+            {data?.language && (
+              <p>
+                <span className="font-semibold">Idioma:</span> {data?.language}
+              </p>
+            )}
+
+            {data?.showtime && (
+              <p>
+                <span className="font-semibold">Horários:</span>{" "}
+                {data?.showtime}
+              </p>
+            )}
+
+            {data?.displayDate && (
+              <p>
+                <span className="font-semibold">Data de Exibição:</span>{" "}
+                {data?.displayDate}
+              </p>
+            )}
+
+            {data?.classification && (
+              <p>
+                <span className="font-semibold">Classificação:</span>{" "}
+                {data?.classification.toLowerCase() === "l"
+                  ? "Livre"
+                  : data?.classification}
+              </p>
+            )}
           </div>
         </div>
       </div>
