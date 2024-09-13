@@ -14,6 +14,7 @@ const config: Config = {
       },
       backgroundColor: {
         primary: "#E6EFF6",
+        "color-primary": "#0088C2",
       },
       backgroundImage: {
         "circular-gradient":

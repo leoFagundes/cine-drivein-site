@@ -11,6 +11,7 @@ import Loader from "@/components/loader";
 import { IoWarning, IoReload } from "react-icons/io5";
 import { BiError } from "react-icons/bi";
 import SiteConfigsRepository from "@/services/repositories/SiteConfigsRepositorie";
+import Button from "@/components/button";
 
 export default function Movies() {
   const [data, setData] = useState<FilmProps[] | undefined>(undefined);
@@ -104,21 +105,20 @@ export default function Movies() {
             className="relative max-w-[450px] h-[300px] shadow-card bg-primary rounded-lg p-3 hover:cursor-default border-[3px] border-primary"
           >
             <div className="absolute top-0 left-0 flex items-center justify-center h-full w-full rounded-lg">
-              <BiError className="text-gray/20 scale-[16]" />
+              <BiError className="text-gray/20 scale-[20]" />
             </div>
-            <div className="flex justify-center items-center flex-col gap-2 z-10 rounded-lg backdrop-blur-[2px] h-full w-full">
-              <h2 className="font-bold text-3xl text-center text-primary">
-                AVISO
-              </h2>
-              <h2 className="font-semibold text-2xl text-center">
-                Hoje o Cine Drive-in estará fechado
-              </h2>
-              <h2
-                onClick={() => setIsWarnClosedOpen(false)}
-                className="font-semibold text-primary text-xl underline hover:cursor-pointer"
-              >
+            <div className="flex justify-center items-center flex-col gap-6 z-10 rounded-lg backdrop-blur-[2px] h-full w-full">
+              <div className="flex flex-col gap-2">
+                <h2 className="font-bold text-3xl text-center text-primary">
+                  AVISO
+                </h2>
+                <h2 className="font-semibold text-2xl text-center">
+                  Hoje o Cine Drive-in estará fechado
+                </h2>
+              </div>
+              <Button onClick={() => setIsWarnClosedOpen(false)}>
                 Ver filmes em cartaz
-              </h2>
+              </Button>
             </div>
           </div>
         </div>

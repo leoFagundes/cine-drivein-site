@@ -1,18 +1,42 @@
 "use client";
 
-import { useState } from "react";
+import SiteConfigsRepository from "@/services/repositories/SiteConfigsRepositorie";
+import { SiteConfig } from "@/types/Types";
+import { useEffect, useState } from "react";
 import { CgClose } from "react-icons/cg";
 
 export default function Popup() {
   const [isOpen, setIsOpen] = useState(false);
   const [popupInfo, setPopupInfo] = useState({
-    title: "Evento de Natal",
-    messages: [
-      "Estamos realizando um evento de natal do dia 20 ao dia 30 de dezembro. Venha ver!",
-      "Venha conferir os eventos.",
-    ],
-    image: "https://www.ivoti.rs.gov.br/admin/imagens/noticias/card-natal1.jpg",
+    title: "",
+    messages: [""],
+    image: "",
   });
+
+  useEffect(() => {
+    async function fetchPopUpInfo() {
+      try {
+        const siteConfigs: SiteConfig =
+          await SiteConfigsRepository.getConfigById("66e399ad3b867fd49fe79d0b");
+        setPopupInfo({
+          image: siteConfigs.popUpImage,
+          title: siteConfigs.popUpText.title,
+          messages: siteConfigs.popUpText.description,
+        });
+
+        if (siteConfigs.popUpText.title || siteConfigs.popUpImage) {
+          setIsOpen(true);
+        }
+      } catch (error) {
+        console.error(
+          "Não foi possível carregar as informações de popup: ",
+          error
+        );
+      }
+    }
+
+    fetchPopUpInfo();
+  }, []);
 
   return (
     <>
