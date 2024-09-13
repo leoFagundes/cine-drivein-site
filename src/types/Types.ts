@@ -16,6 +16,17 @@ export interface FilmProps {
   screening: "Sessão 1" | "Sessão 2" | "Sessão 3" | "Sessão 4" | "";
 }
 
+export interface SiteConfig {
+  _id: string;
+  isClosed: boolean;
+  isEvent: string;
+  popUpImage: string;
+  popUpText: {
+    title: string;
+    description: string[];
+  };
+}
+
 export type Schedule = {
   _id: string;
   isOpen: boolean;

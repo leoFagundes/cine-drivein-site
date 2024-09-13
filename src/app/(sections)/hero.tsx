@@ -1,10 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import cineDrivein from "../../../public/svg/bg-cinedrivein.svg";
 import cineDriveinNatal from "../../../public/images/bg-cinedrivein-natal.png";
 import cineDriveinHalloween from "../../../public/images/bg-cinedrivein-halloween.png";
+import SiteConfigsRepository from "@/services/repositories/SiteConfigsRepositorie";
+import { SiteConfig } from "@/types/Types";
 
 export default function Hero() {
   const [isEvent, setIsEvent] = useState({
@@ -18,6 +20,39 @@ export default function Hero() {
     : isEvent.christmas
     ? cineDriveinNatal.src
     : cineDriveinHalloween.src;
+
+  useEffect(() => {
+    async function fetchEvent() {
+      try {
+        const configs: SiteConfig = await SiteConfigsRepository.getConfigById(
+          "66e399ad3b867fd49fe79d0b"
+        );
+        if (configs.isEvent === "christmas") {
+          setIsEvent({
+            default: false,
+            christmas: true,
+            halloween: false,
+          });
+        } else if (configs.isEvent === "halloween") {
+          setIsEvent({
+            default: false,
+            christmas: false,
+            halloween: true,
+          });
+        } else {
+          setIsEvent({
+            default: true,
+            christmas: false,
+            halloween: false,
+          });
+        }
+      } catch (error) {
+        console.error("Não foi possível carregar evento: ", error);
+      }
+    }
+
+    fetchEvent();
+  }, []);
 
   return (
     <section className="flex justify-center sm:gap-4 flex-wrap lg:flex-nowrap sm:min-h-[400px] w-11/12 sm:w-10/12 max-w-[1200px] mb-20 lg:my-20">

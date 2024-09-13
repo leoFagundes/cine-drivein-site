@@ -5,11 +5,12 @@ import React, { Fragment, useEffect, useState } from "react";
 import SectionContainer from "../../containers/sectionContainer";
 import { useRouter } from "next/navigation";
 import FilmRepositories from "@/services/repositories/FilmRepositorie";
-import { FilmProps } from "@/types/Types";
+import { FilmProps, SiteConfig } from "@/types/Types";
 import Image from "next/image";
 import Loader from "@/components/loader";
 import { IoWarning, IoReload } from "react-icons/io5";
 import { BiError } from "react-icons/bi";
+import SiteConfigsRepository from "@/services/repositories/SiteConfigsRepositorie";
 
 export default function Movies() {
   const [data, setData] = useState<FilmProps[] | undefined>(undefined);
@@ -23,8 +24,12 @@ export default function Movies() {
   async function fetchFilms() {
     setLoading(true);
     setLoadError(false);
+
     try {
       const films = await FilmRepositories.getFilms();
+      const configs: SiteConfig = await SiteConfigsRepository.getConfigById(
+        "66e399ad3b867fd49fe79d0b"
+      );
 
       // Ordena os filmes pela ordem das sessões
       const sortedFilms = films.sort((a: any, b: any) => {
@@ -37,8 +42,8 @@ export default function Movies() {
       setData(sortedFilms);
       setContainerWidth(350 * sortedFilms.length + 48 * sortedFilms.length);
 
-      // setIsClosedToday(true);
-      // setIsWarnClosedOpen(true);
+      setIsClosedToday(configs.isClosed);
+      setIsWarnClosedOpen(configs.isClosed);
     } catch (error) {
       console.error("Erro ao carregar filmes", error);
       setLoadError(true);
@@ -96,7 +101,7 @@ export default function Movies() {
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="relative w-[450px] h-[300px] shadow-card bg-primary rounded-lg p-3 hover:cursor-default"
+            className="relative max-w-[450px] h-[300px] shadow-card bg-primary rounded-lg p-3 hover:cursor-default border-[3px] border-primary"
           >
             <div className="absolute top-0 left-0 flex items-center justify-center h-full w-full rounded-lg">
               <BiError className="text-gray/20 scale-[16]" />
