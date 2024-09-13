@@ -69,13 +69,13 @@ export default function Hero() {
       </div>
       <div>
         <Image
-          className="block w-[700px] h-full bg-center drop-shadow-lg rounded-lg"
+          className="block w-[700px] bg-center drop-shadow-lg rounded-lg"
           src={background}
           width={700}
           height={500}
           alt="teste"
         />
-        <div className="lg:hidden -mt-3 flex gap-1 flex-col items-center text-center">
+        <div className="lg:hidden mt-3 flex gap-1 flex-col items-center text-center">
           <div>
             <p className="font-bold text-primary text-xl">
               PATRIMÔNIO CULTURAL
