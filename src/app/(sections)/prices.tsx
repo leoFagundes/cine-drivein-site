@@ -23,22 +23,44 @@ export default function Prices() {
         />
         <div className="flex flex-col justify-center p-8 gap-4 box-border w-full h-full">
           <article className="flex flex-col gap-3">
-            <div>
+            <div className="flex flex-col gap-2">
               <p className="flex sm:items-center sm:gap-1 sm:flex-row flex-col text-xl sm:text-3xl font-bold">
                 Meia <span className="text-xs font-medium">(por pessoa)</span>
               </p>
-              <p className="text-primary font-bold text-2xl sm:text-4xl">
-                R$ 20,00
-              </p>
+              <div className="flex items-center gap-x-1 sm:flex-nowrap flex-wrap">
+                <p className="text-primary font-bold text-2xl sm:text-4xl text-nowrap">
+                  R$ 20,00{" "}
+                </p>
+                <span className="text-xs font-medium">(Segunda e Terça)</span>
+              </div>
+              <div className="flex items-center gap-x-1 sm:flex-nowrap flex-wrap">
+                <p className="text-primary font-bold text-2xl sm:text-4xl text-nowrap">
+                  R$ 22,00{" "}
+                </p>
+                <span className="text-xs font-medium">
+                  (Quarta, Quinta, Sexta, Sábado e Domingo)
+                </span>
+              </div>
             </div>
-            <div>
+            <div className="flex flex-col gap-2">
               <p className="flex sm:items-center sm:gap-1 sm:flex-row flex-col text-xl sm:text-3xl font-bold">
                 Inteira{" "}
                 <span className="text-xs font-medium">(por pessoa)</span>
               </p>
-              <p className="text-primary font-bold text-2xl sm:text-4xl">
-                R$ 40,00
-              </p>
+              <div className="flex items-center gap-x-1 sm:flex-nowrap flex-wrap">
+                <p className="text-primary font-bold text-2xl sm:text-4xl text-nowrap">
+                  R$ 40,00{" "}
+                </p>
+                <span className="text-xs font-medium">(Segunda e Terça)</span>
+              </div>
+              <div className="flex items-center gap-x-1 sm:flex-nowrap flex-wrap">
+                <p className="text-primary font-bold text-2xl sm:text-4xl text-nowrap">
+                  R$ 44,00{" "}
+                </p>
+                <span className="text-xs font-medium">
+                  (Quarta, Quinta, Sexta, Sábado e Domingo)
+                </span>
+              </div>
             </div>
           </article>
 

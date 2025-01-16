@@ -7,6 +7,7 @@ import cineDriveinNatal from "../../../public/images/bg-cinedrivein-natal.png";
 import cineDriveinHalloween from "../../../public/images/bg-cinedrivein-halloween.png";
 import SiteConfigsRepository from "@/services/repositories/SiteConfigsRepositorie";
 import { SiteConfig } from "@/types/Types";
+import Snowfall from "react-snowfall";
 
 export default function Hero() {
   const [isEvent, setIsEvent] = useState({
@@ -56,6 +57,7 @@ export default function Hero() {
 
   return (
     <section className="flex justify-center sm:gap-4 flex-wrap lg:flex-nowrap sm:min-h-[400px] w-11/12 sm:w-10/12 max-w-[1200px] mb-10 lg:my-20">
+      {isEvent.christmas && <Snowfall snowflakeCount={50} color="#add8e6" />}
       <div className="hidden lg:flex flex-col justify-center gap-2 w-[350px]">
         <h1 className="text-primary text-center lg:text-start font-bold text-5xl">
           PATRIMÔNIO CULTURAL

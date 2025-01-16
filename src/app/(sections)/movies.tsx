@@ -125,7 +125,7 @@ export default function Movies() {
       )}
 
       <div
-        className={`flex justify-around w-full gap-8 flex-wrap`}
+        className={`flex justify-center w-full gap-8 flex-wrap`}
         style={{ maxWidth: containerWidth }}
       >
         {data?.map(
