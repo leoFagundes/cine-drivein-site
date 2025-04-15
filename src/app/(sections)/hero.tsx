@@ -5,22 +5,24 @@ import React, { useEffect, useState } from "react";
 import cineDrivein from "../../../public/svg/bg-cinedrivein.svg";
 import cineDriveinNatal from "../../../public/images/bg-cinedrivein-natal.png";
 import cineDriveinHalloween from "../../../public/images/bg-cinedrivein-halloween.png";
+import cineDriveinEaster from "../../../public/images/bg-cinedrivein-pascoa.png";
 import SiteConfigsRepository from "@/services/repositories/SiteConfigsRepositorie";
 import { SiteConfig } from "@/types/Types";
 import Snowfall from "react-snowfall";
 
 export default function Hero() {
-  const [isEvent, setIsEvent] = useState({
-    default: true,
-    christmas: false,
-    halloween: false,
-  });
+  const [currentEvent, setCurrentEvent] = useState<
+    "default" | "christmas" | "halloween" | "easter"
+  >("default");
 
-  const background = isEvent.default
-    ? cineDrivein.src
-    : isEvent.christmas
-    ? cineDriveinNatal.src
-    : cineDriveinHalloween.src;
+  const eventBackgrounds = {
+    default: cineDrivein.src,
+    christmas: cineDriveinNatal.src,
+    halloween: cineDriveinHalloween.src,
+    easter: cineDriveinEaster.src,
+  };
+
+  const background = eventBackgrounds[currentEvent];
 
   useEffect(() => {
     async function fetchEvent() {
@@ -29,23 +31,13 @@ export default function Hero() {
           "66e399ad3b867fd49fe79d0b"
         );
         if (configs.isEvent === "christmas") {
-          setIsEvent({
-            default: false,
-            christmas: true,
-            halloween: false,
-          });
+          setCurrentEvent("christmas");
         } else if (configs.isEvent === "halloween") {
-          setIsEvent({
-            default: false,
-            christmas: false,
-            halloween: true,
-          });
+          setCurrentEvent("halloween");
+        } else if (configs.isEvent === "easter") {
+          setCurrentEvent("easter");
         } else {
-          setIsEvent({
-            default: true,
-            christmas: false,
-            halloween: false,
-          });
+          setCurrentEvent("default");
         }
       } catch (error) {
         console.error("Não foi possível carregar evento: ", error);
@@ -53,11 +45,14 @@ export default function Hero() {
     }
 
     fetchEvent();
+    console.log(currentEvent);
   }, []);
 
   return (
     <section className="flex justify-center sm:gap-4 flex-wrap lg:flex-nowrap sm:min-h-[400px] w-11/12 sm:w-10/12 max-w-[1200px] mb-10 lg:my-20">
-      {isEvent.christmas && <Snowfall snowflakeCount={50} color="#add8e6" />}
+      {currentEvent === "christmas" && (
+        <Snowfall snowflakeCount={50} color="#add8e6" />
+      )}
       <div className="hidden lg:flex flex-col justify-center gap-2 w-[350px]">
         <h1 className="text-primary text-center lg:text-start font-bold text-5xl">
           PATRIMÔNIO CULTURAL
