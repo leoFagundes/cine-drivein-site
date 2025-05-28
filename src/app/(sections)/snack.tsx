@@ -61,55 +61,6 @@ export default function Snack() {
               <span className="text-primary">seguro!</span>
             </p>
             <br />
-            <p>
-              Acesse{" "}
-              <Link
-                target="_blank"
-                className="text-primary underline sm:decoration-transparent sm:hover:decoration-inherit sm:hover:underline"
-                href={"https://app.cinedrivein.com"}
-              >
-                https://app.cinedrivein.com
-              </Link>{" "}
-              para conferir nosso cardápio completo e fazer seu pedido.
-            </p>
-            <br />
-            <div className="flex items-center gap-3">
-              <p className="text-right">
-                Ou Clique no ícone para ver as nossas opções!
-              </p>
-              <img
-                onClick={() => setIsModalOpen(true)}
-                className="h-16 hover:cursor-pointer"
-                src="/svg/menu-icon.svg"
-                alt="menu"
-              />
-              <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-                <div
-                  onClick={(e) => e.stopPropagation()}
-                  className="h-full w-full max-w-[500px] bg-contain bg-no-repeat bg-center"
-                  style={{ backgroundImage: `url(${menu.src})` }}
-                />
-                <div className="hover:cursor-pointer absolute top-4 right-8 flex items-center gap-4">
-                  <a
-                    className="h-full"
-                    href="/images/menu.png"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <FaExpand
-                      size={"22px"}
-                      className="text-white drop-shadow-md"
-                    />
-                  </a>
-
-                  <IoMdClose
-                    onClick={() => setIsModalOpen(false)}
-                    size={"32px"}
-                    className="hover:cursor-pointer drop-shadow-md text-white"
-                  />
-                </div>
-              </Modal>
-            </div>
           </div>
         </div>
         <div
