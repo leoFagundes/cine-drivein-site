@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "postbuild": "cp public/htaccess-template out/.htaccess",
     "start": "next start",
     "lint": "next lint"
   },
