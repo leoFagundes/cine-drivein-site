@@ -32,6 +32,12 @@ export default function FilmLayout({ data }: FilmLayoutProps) {
               </p>
             )}
 
+            {data?.director && data?.director.length > 0 && (
+              <p>
+                <span className="font-semibold">Direção:</span> {data?.director}
+              </p>
+            )}
+
             {data?.cast && data?.cast.length > 0 && (
               <p>
                 <span className="font-semibold">Elenco:</span>{" "}

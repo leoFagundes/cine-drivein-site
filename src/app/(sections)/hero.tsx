@@ -61,7 +61,7 @@ export default function Hero() {
           DO DISTRITO FEDERAL
         </p>
         <span className="text-primary text-center lg:text-start text-lg font-semibold">
-          Projeto de lei Nº 1.608/2013
+          Projeto de Lei nº 6.055/2017
         </span>
       </div>
       <div>
