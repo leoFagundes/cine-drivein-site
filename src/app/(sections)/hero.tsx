@@ -80,7 +80,7 @@ export default function Hero() {
             <p className="text-base italic font-medium">Do Distrito Federal</p>
           </div>
           <p className="text-primary text-center text-sm font-semibold italic">
-            Projeto de lei Nº 1.608/2013
+            Projeto de Lei nº 6.055/2017
           </p>
         </div>
       </div>
