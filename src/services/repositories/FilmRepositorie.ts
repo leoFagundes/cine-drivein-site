@@ -1,4 +1,4 @@
-import { FilmProps } from "@/types/Types";
+import { Film } from "@/types/Types";
 import { api } from "../api";
 
 class FilmRepositories {
@@ -31,7 +31,7 @@ class FilmRepositories {
     }
   }
 
-  static async updateFilm(id: string, bodyJson: Partial<FilmProps>) {
+  static async updateFilm(id: string, bodyJson: Partial<Film>) {
     try {
       await api.put(`/films/${id}`, bodyJson);
     } catch (error) {
@@ -40,7 +40,7 @@ class FilmRepositories {
     }
   }
 
-  static async createFilm(newFilm: FilmProps) {
+  static async createFilm(newFilm: Film) {
     try {
       await api.post("/films", newFilm);
       return true;

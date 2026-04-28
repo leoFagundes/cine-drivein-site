@@ -1,10 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
 
-import { FilmProps } from "@/types/Types";
+import { Film } from "@/types/Types";
 import React from "react";
 
 interface FilmLayoutProps {
-  data: FilmProps | undefined;
+  data: Film | undefined;
 }
 
 export default function FilmLayout({ data }: FilmLayoutProps) {
