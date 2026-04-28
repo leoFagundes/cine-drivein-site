@@ -9,6 +9,8 @@ import cineDriveinEaster from "../../../public/images/bg-cinedrivein-pascoa.png"
 import SiteConfigsRepository from "@/services/repositories/SiteConfigsRepositorie";
 import { SiteConfig } from "@/types/Types";
 import Snowfall from "react-snowfall";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "@/services/firebase";
 
 export default function Hero() {
   const [currentEvent, setCurrentEvent] = useState<
@@ -27,26 +29,55 @@ export default function Hero() {
   useEffect(() => {
     async function fetchEvent() {
       try {
-        const configs: SiteConfig = await SiteConfigsRepository.getConfigById(
-          "66e399ad3b867fd49fe79d0b"
-        );
-        if (configs.isEvent === "christmas") {
-          setCurrentEvent("christmas");
-        } else if (configs.isEvent === "halloween") {
-          setCurrentEvent("halloween");
-        } else if (configs.isEvent === "easter") {
-          setCurrentEvent("easter");
+        console.log("buscando config...");
+        const ref = doc(db, "siteConfig", "main");
+        const snap = await getDoc(ref);
+        console.log("SNAP:", snap.exists(), snap.data());
+
+        if (!snap.exists()) {
+          console.warn("Config não encontrada");
+          return;
+        }
+
+        const data = snap.data();
+        const event = data.isEvent;
+
+        if (["christmas", "halloween", "easter"].includes(event)) {
+          setCurrentEvent(event);
         } else {
           setCurrentEvent("default");
         }
       } catch (error) {
-        console.error("Não foi possível carregar evento: ", error);
+        console.error("Erro ao buscar evento:", error);
       }
     }
 
     fetchEvent();
-    console.log(currentEvent);
   }, []);
+
+  // useEffect(() => {
+  //   async function fetchEvent() {
+  //     try {
+  //       const configs: SiteConfig = await SiteConfigsRepository.getConfigById(
+  //         "66e399ad3b867fd49fe79d0b",
+  //       );
+  //       if (configs.isEvent === "christmas") {
+  //         setCurrentEvent("christmas");
+  //       } else if (configs.isEvent === "halloween") {
+  //         setCurrentEvent("halloween");
+  //       } else if (configs.isEvent === "easter") {
+  //         setCurrentEvent("easter");
+  //       } else {
+  //         setCurrentEvent("default");
+  //       }
+  //     } catch (error) {
+  //       console.error("Não foi possível carregar evento: ", error);
+  //     }
+  //   }
+
+  //   fetchEvent();
+  //   console.log(currentEvent);
+  // }, []);
 
   return (
     <section className="flex justify-center sm:gap-4 flex-wrap lg:flex-nowrap sm:min-h-[400px] w-11/12 sm:w-10/12 max-w-[1200px] mb-10 lg:my-20">

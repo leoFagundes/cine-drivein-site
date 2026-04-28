@@ -5,16 +5,22 @@ import React, { Fragment, useEffect, useState } from "react";
 import SectionContainer from "../../containers/sectionContainer";
 import { useRouter } from "next/navigation";
 import FilmRepositories from "@/services/repositories/FilmRepositorie";
-import { FilmProps, SiteConfig } from "@/types/Types";
+import { Film, SiteConfig } from "@/types/Types";
 import Image from "next/image";
 import Loader from "@/components/loader";
 import { IoWarning, IoReload } from "react-icons/io5";
 import { BiError } from "react-icons/bi";
 import SiteConfigsRepository from "@/services/repositories/SiteConfigsRepositorie";
 import Button from "@/components/button";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "@/services/firebase";
+
+type FilmWithSession = Film & {
+  sessionKey: string;
+};
 
 export default function Movies() {
-  const [data, setData] = useState<FilmProps[] | undefined>(undefined);
+  const [data, setData] = useState<FilmWithSession[] | undefined>(undefined);
   const [containerWidth, setContainerWidth] = useState(1000);
   const [loading, setLoading] = useState(false);
   const [loadError, setLoadError] = useState(false);
@@ -27,24 +33,38 @@ export default function Movies() {
     setLoadError(false);
 
     try {
-      const films = await FilmRepositories.getFilms();
-      const configs: SiteConfig = await SiteConfigsRepository.getConfigById(
-        "66e399ad3b867fd49fe79d0b"
-      );
+      const ref = doc(db, "siteConfig", "main");
+      const snap = await getDoc(ref);
 
-      // Ordena os filmes pela ordem das sessões
-      const sortedFilms = films.sort((a: any, b: any) => {
-        const sessionOrder = ["Sessão 1", "Sessão 2", "Sessão 3", "Sessão 4"];
-        return (
-          sessionOrder.indexOf(a.screening) - sessionOrder.indexOf(b.screening)
-        );
-      });
+      if (!snap.exists()) {
+        throw new Error("Config não encontrada");
+      }
 
-      setData(sortedFilms);
-      setContainerWidth(350 * sortedFilms.length + 48 * sortedFilms.length);
+      const data = snap.data() as SiteConfig;
 
-      setIsClosedToday(configs.isClosed);
-      setIsWarnClosedOpen(configs.isClosed);
+      const sessions: (Film | null | undefined)[] = [
+        data.session1,
+        data.session2,
+        data.session3,
+        data.session4,
+      ];
+
+      const films: FilmWithSession[] = sessions
+        .map((session, index) => {
+          if (!session) return null;
+
+          return {
+            ...session,
+            sessionKey: `screening${index + 1}`,
+          };
+        })
+        .filter(Boolean) as FilmWithSession[];
+
+      setData(films);
+      setContainerWidth(350 * films.length + 48 * films.length);
+
+      setIsClosedToday(data.isClosed);
+      setIsWarnClosedOpen(data.isClosed);
     } catch (error) {
       console.error("Erro ao carregar filmes", error);
       setLoadError(true);
@@ -96,92 +116,86 @@ export default function Movies() {
     >
       {loading && <Loader />}
       {isWarnClosedOpen && (
-        <div
-          onClick={() => setIsWarnClosedOpen(false)}
-          className="absolute flex hover:cursor-pointer justify-center items-start md:items-center w-full h-full bg-gray/50 z-20 p-8"
-        >
+        <div className="absolute flex justify-center items-start md:items-center w-full h-full bg-stone-100/60 backdrop-blur-[2px] z-20 p-8">
           <div
             onClick={(e) => e.stopPropagation()}
-            className="relative max-w-[450px] h-[300px] shadow-card bg-primary rounded-lg p-3 hover:cursor-default border-[3px] border-primary"
+            className="relative w-full max-w-[360px] bg-white rounded-2xl border border-stone-200 p-8 text-center flex flex-col items-center gap-5 shadow-sm hover:cursor-default"
           >
-            <div className="absolute top-0 left-0 flex items-center justify-center h-full w-full rounded-lg">
-              <BiError className="text-gray/20 scale-[20]" />
+            {/* Ícone */}
+            <div className="w-12 h-12 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center">
+              <BiError className="text-[22px] text-amber-600" />
             </div>
-            <div className="flex justify-center items-center flex-col gap-6 z-10 rounded-lg backdrop-blur-[2px] h-full w-full">
-              <div className="flex flex-col gap-2">
-                <h2 className="font-bold text-3xl text-center text-primary">
-                  AVISO
-                </h2>
-                <h2 className="font-semibold text-2xl text-center">
-                  Hoje o Cine Drive-in estará fechado
-                </h2>
-              </div>
-              <Button onClick={() => setIsWarnClosedOpen(false)}>
-                Ver filmes em cartaz
-              </Button>
+
+            {/* Textos */}
+            <div className="flex flex-col gap-1.5">
+              <span className="text-[11px] font-medium tracking-[0.13em] uppercase text-amber-600">
+                Aviso
+              </span>
+              <h2 className="text-[18px] font-semibold text-stone-900 leading-snug">
+                Hoje o Cine Drive-in
+                <br />
+                estará fechado
+              </h2>
+              <p className="text-[13px] text-stone-400 mt-0.5">
+                Volte em breve para conferir a programação.
+              </p>
             </div>
+
+            {/* Botão */}
+            <Button
+              onClick={() => setIsWarnClosedOpen(false)}
+              className="w-full bg-stone-900 text-stone-100 hover:bg-stone-800 text-sm"
+            >
+              Ver filmes em cartaz
+            </Button>
           </div>
         </div>
       )}
 
       <div
-        className={`flex justify-center w-full gap-8 flex-wrap`}
+        className="flex justify-center w-full gap-8 flex-wrap"
         style={{ maxWidth: containerWidth }}
       >
-        {data?.map(
-          (
-            { _id, title, showtime, image, classification, screening },
-            index
-          ) => (
-            <Fragment key={index}>
-              {title ? (
-                <div
-                  onClick={() => {
-                    if (screening === "Sessão 1") {
-                      router.push(`/film/detail/screening1`);
-                    }
-                    if (screening === "Sessão 2") {
-                      router.push(`/film/detail/screening2`);
-                    }
-                    if (screening === "Sessão 3") {
-                      router.push(`/film/detail/screening3`);
-                    }
-                    if (screening === "Sessão 4") {
-                      router.push(`/film/detail/screening4`);
-                    }
-                  }}
-                  className="w-[350px] group contrast-[1.1] hover:cursor-pointer duration-200"
-                >
-                  <div className="relative overflow-hidden rounded-lg shadow-card">
-                    <img
-                      src={image}
-                      alt={title}
-                      className="w-[350px] h-[500px] rounded-lg shadow-md sm:group-hover:scale-110 duration-500 "
+        {data?.map((film, index) => {
+          const { title, showtime, image, classification } = film;
+
+          const sessionNumber = index + 1;
+
+          return (
+            <div
+              key={index}
+              onClick={() => router.push(`/film/detail/${film.sessionKey}`)}
+              className="w-[350px] group contrast-[1.1] hover:cursor-pointer duration-200"
+            >
+              <div className="relative overflow-hidden rounded-lg shadow-card">
+                <img
+                  src={image}
+                  alt={title}
+                  className="w-[350px] h-[500px] rounded-lg shadow-md sm:group-hover:scale-110 duration-500"
+                />
+              </div>
+
+              <div className="flex flex-col relative gap-1 p-3 border-gray rounded-b-lg">
+                <div className="flex justify-between gap-1">
+                  <p className="text-sm font-bold">{title}</p>
+
+                  <div className="min-w-8 min-h-8">
+                    <Image
+                      src={`/images/classifications/classificacao-${classification}.png`}
+                      width={32}
+                      height={32}
+                      alt="classification"
                     />
                   </div>
-                  <div className="flex flex-col relative gap-1 p-3 border-gray rounded-b-lg">
-                    <div className="flex justify-between gap-1">
-                      <p className="text-sm font-bold">{title}</p>
-                      <div className="min-w-8 min-h-8">
-                        <Image
-                          src={`/images/classifications/classificacao-${classification}.png`}
-                          width={32}
-                          height={32}
-                          alt="classification"
-                        />
-                      </div>
-                    </div>
-                    <p className="text-sm">
-                      <span className="font-semibold">Horário:</span> {showtime}
-                    </p>
-                  </div>
                 </div>
-              ) : (
-                ""
-              )}
-            </Fragment>
-          )
-        )}
+
+                <p className="text-sm">
+                  <span className="font-semibold">Horário:</span> {showtime}
+                </p>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </SectionContainer>
   );

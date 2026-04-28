@@ -16,24 +16,24 @@ export default function Snack() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [schedule, setSchedule] = useState<Partial<Schedule>>({
     closingTime: "23:00",
-    openingTime: "18:00",
+    openingTime: "17:30",
   });
 
-  useEffect(() => {
-    async function fecthSchedule() {
-      try {
-        const newSchedule = await ScheduleRepositories.getSchedule();
-        setSchedule({
-          closingTime: newSchedule.closingTime,
-          openingTime: newSchedule.openingTime,
-        });
-      } catch (error) {
-        console.error("Não foi possível carregar o schedule: ", error);
-      }
-    }
+  // useEffect(() => {
+  //   async function fecthSchedule() {
+  //     try {
+  //       const newSchedule = await ScheduleRepositories.getSchedule();
+  //       setSchedule({
+  //         closingTime: newSchedule.closingTime,
+  //         openingTime: newSchedule.openingTime,
+  //       });
+  //     } catch (error) {
+  //       console.error("Não foi possível carregar o schedule: ", error);
+  //     }
+  //   }
 
-    fecthSchedule();
-  }, []);
+  //   fecthSchedule();
+  // }, []);
 
   return (
     <SectionContainer id="snack" title="LANCHONETE" subtitle="Cardápio">
