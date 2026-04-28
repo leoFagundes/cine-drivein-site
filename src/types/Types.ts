@@ -55,18 +55,31 @@ export interface Film {
   trailer: string;
 }
 
+type WeekDay = 0 | 1 | 2 | 3 | 4 | 5 | 6; // domingo = 0
+
+export interface PriceRule {
+  label: string;
+  days: WeekDay[];
+  meia: number;
+  inteira: number;
+}
+
 export interface SiteConfig {
   siteUrl: string;
   isClosed: boolean;
+  openingTime?: string;
+  closingTime?: string;
   isEvent: EventType;
   popUpEnabled: boolean;
   popUpImage?: string;
   popUpTitle?: string;
   popUpDescriptions?: string[];
+  popUpImageHistory?: string[];
   session1?: Film | null;
   session2?: Film | null;
   session3?: Film | null;
   session4?: Film | null;
+  prices?: PriceRule[];
 }
 
 export type Schedule = {

@@ -1,10 +1,53 @@
+"use client";
+
 import { FaLink } from "react-icons/fa6";
 import SectionContainer from "../../containers/sectionContainer";
 import { FaCircleInfo } from "react-icons/fa6";
 import ticket from "../../../public/images/ticket.png";
 import Link from "next/link";
+import { PriceRule, SiteConfig } from "@/types/Types";
+import { db } from "@/services/firebase";
+import { doc, getDoc } from "firebase/firestore";
+import { useState, useEffect } from "react";
 
 export default function Prices() {
+  const [prices, setPrices] = useState<PriceRule[]>([]);
+
+  useEffect(() => {
+    async function fetchPrices() {
+      try {
+        const ref = doc(db, "siteConfig", "main");
+        const snap = await getDoc(ref);
+
+        if (!snap.exists()) return;
+
+        const data = snap.data() as SiteConfig;
+
+        setPrices(data.prices ?? []);
+      } catch (err) {
+        console.error("Erro ao buscar preços:", err);
+      }
+    }
+
+    fetchPrices();
+  }, []);
+
+  const meiaPrices = prices.map((p) => ({
+    label: p.label,
+    value: p.meia,
+  }));
+
+  const inteiraPrices = prices.map((p) => ({
+    label: p.label,
+    value: p.inteira,
+  }));
+
+  function formatPrice(value: number) {
+    return value.toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    });
+  }
   return (
     <SectionContainer
       id="prices"
@@ -23,7 +66,7 @@ export default function Prices() {
         />
         <div className="flex flex-col justify-center p-8 gap-4 box-border w-full h-full">
           <article className="flex flex-col gap-3">
-            <div className="flex flex-col gap-2">
+            {/* <div className="flex flex-col gap-2">
               <p className="flex sm:items-center sm:gap-1 sm:flex-row flex-col text-xl sm:text-3xl font-bold">
                 Meia <span className="text-xs font-medium">(por pessoa)</span>
               </p>
@@ -61,6 +104,41 @@ export default function Prices() {
                   (Quarta, Quinta, Sexta, Sábado e Domingo)
                 </span>
               </div>
+            </div> */}
+            <div className="flex flex-col gap-2">
+              <p className="flex sm:items-center sm:gap-1 sm:flex-row flex-col text-xl sm:text-3xl font-bold">
+                Meia <span className="text-xs font-medium">(por pessoa)</span>
+              </p>
+
+              {meiaPrices.map((p, i) => (
+                <div
+                  key={i}
+                  className="flex items-center gap-x-1 sm:flex-nowrap flex-wrap"
+                >
+                  <p className="text-primary font-bold text-2xl sm:text-4xl text-nowrap">
+                    {formatPrice(p.value)}
+                  </p>
+                  <span className="text-xs font-medium">({p.label})</span>
+                </div>
+              ))}
+            </div>
+            <div className="flex flex-col gap-2">
+              <p className="flex sm:items-center sm:gap-1 sm:flex-row flex-col text-xl sm:text-3xl font-bold">
+                Inteira{" "}
+                <span className="text-xs font-medium">(por pessoa)</span>
+              </p>
+
+              {inteiraPrices.map((p, i) => (
+                <div
+                  key={i}
+                  className="flex items-center gap-x-1 sm:flex-nowrap flex-wrap"
+                >
+                  <p className="text-primary font-bold text-2xl sm:text-4xl text-nowrap">
+                    {formatPrice(p.value)}
+                  </p>
+                  <span className="text-xs font-medium">({p.label})</span>
+                </div>
+              ))}
             </div>
           </article>
 
