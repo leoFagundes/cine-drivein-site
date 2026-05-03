@@ -60,7 +60,7 @@ export default function Header() {
   return (
     <>
       <div className="h-[100px] bg-red-200 lg:h-[80px]" />
-      <section className="fixed flex justify-center w-full z-40 bg-primary/85 backdrop-blur-sm">
+      <section className="fixed flex justify-center w-full z-40 bg-secondary/85 backdrop-blur-sm">
         <nav className="flex items-center justify-between h-20 py-4 w-11/12 sm:w-10/12 max-w-[1200px]">
           <Link href={"/"}>
             {" "}
@@ -84,7 +84,7 @@ export default function Header() {
               `lg:hidden block tham tham-e-squeeze tham-w-6 scale-110 hover:opacity-100 md:hover:opacity-80`,
               {
                 "tham-active": opened,
-              }
+              },
             )}
           >
             <div className="tham-box">

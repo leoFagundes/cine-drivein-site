@@ -6,7 +6,7 @@ import Link from "next/link";
 export default function BecomeAnAdvertiser() {
   return (
     <section className="flex flex-col gap-6 w-11/12 sm:w-10/12 max-w-[1200px] my-8">
-      <div className="min-h-[2000px] hidden md:flex flex-col absolute top-0 left-0 pointer-events-none overflow-hidden">
+      {/* <div className="min-h-[2000px] hidden md:flex flex-col absolute top-0 left-0 pointer-events-none overflow-hidden">
         <img
           className="mix-blend-overlay -z-10 w-screen scale-125"
           src="/svg/roll3.svg"
@@ -17,7 +17,7 @@ export default function BecomeAnAdvertiser() {
           src="/svg/roll2.svg"
           alt="roll"
         />
-      </div>
+      </div> */}
 
       <img
         className="shadow-card rounded-lg contrast-[1.1] brightness-110 saturate-[1.1]"

@@ -11,6 +11,14 @@ html {
   scroll-behavior: smooth;
 }
 
+body {
+  background-color: #eef2f7;
+  background-image: url("/svg/cinema-bg.svg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
