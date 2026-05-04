@@ -2,6 +2,7 @@
 
 import { Film } from "@/types/Types";
 import React from "react";
+import { BiError } from "react-icons/bi";
 
 interface FilmLayoutProps {
   data: Film | undefined;
@@ -15,6 +16,22 @@ export default function FilmLayout({ data }: FilmLayoutProps) {
           <h1 className="max-w-[400px] text-center text-3xl text-cente font-bold text-primary">
             {data?.title}
           </h1>
+          {/* Avisos */}
+          {(data?.avisos ?? []).length > 0 && (
+            <div className="flex flex-col gap-2 w-full max-w-[350px]">
+              {(data?.avisos ?? []).map((aviso, i) => (
+                <div
+                  key={i}
+                  className="flex items-center gap-2.5 bg-amber-200/50 px-4 py-2.5 rounded-lg"
+                >
+                  <BiError className="text-amber-900 flex-shrink-0" size={15} />
+                  <p className="text-xs font-semibold text-amber-900 leading-snug tracking-wide uppercase">
+                    {aviso}
+                  </p>
+                </div>
+              ))}
+            </div>
+          )}
           <img
             className="max-w-[350px] rounded-lg shadow-card"
             src={data?.image}

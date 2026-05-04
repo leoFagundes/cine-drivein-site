@@ -1,32 +1,3 @@
-// export interface FilmProps {
-//   _id: string;
-//   title: string;
-//   showtime: string;
-//   image: string;
-//   classification: "L" | "12" | "14" | "16" | "18";
-//   synopsis: string;
-//   director: string;
-//   writer: string[];
-//   cast: string[];
-//   genres: string[];
-//   duration: string;
-//   language: string;
-//   displayDate: string;
-//   trailer: string;
-//   screening: "Sessão 1" | "Sessão 2" | "Sessão 3" | "Sessão 4" | "";
-// }
-
-// export interface SiteConfig {
-//   _id: string;
-//   isClosed: boolean;
-//   isEvent: string;
-//   popUpImage: string;
-//   popUpText: {
-//     title: string;
-//     description: string[];
-//   };
-// }
-
 export type FilmClassification =
   | "L"
   | "6"
@@ -53,6 +24,7 @@ export interface Film {
   language: string;
   displayDate: string;
   trailer: string;
+  avisos?: string[];
 }
 
 type WeekDay = 0 | 1 | 2 | 3 | 4 | 5 | 6; // domingo = 0

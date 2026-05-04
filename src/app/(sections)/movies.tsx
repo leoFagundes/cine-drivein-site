@@ -173,6 +173,25 @@ export default function Movies() {
                   alt={title}
                   className="w-[350px] h-[500px] rounded-lg shadow-md sm:group-hover:scale-110 duration-500"
                 />
+                {/* Avisos */}
+                {(film.avisos ?? []).length > 0 && (
+                  <div className="flex flex-col gap-1.5 mt-1 absolute bottom-2 right-2">
+                    {(film.avisos ?? []).map((aviso, i) => (
+                      <div
+                        key={i}
+                        className="flex items-center gap-2 bg-black/30 backdrop-blur-[4px] border border-white/50 rounded-md px-3 py-2"
+                      >
+                        <BiError
+                          className="text-white mt-0.5 flex-shrink-0"
+                          size={15}
+                        />
+                        <p className="text-xs text-white font-medium leading-snug">
+                          {aviso}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
               <div className="flex flex-col relative gap-1 p-3 border-gray rounded-b-lg">
