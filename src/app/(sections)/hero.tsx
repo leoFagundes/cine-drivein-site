@@ -2,10 +2,10 @@
 
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import cineDrivein from "../../../public/svg/bg-cinedrivein.svg";
-import cineDriveinNatal from "../../../public/images/bg-cinedrivein-natal.png";
-import cineDriveinHalloween from "../../../public/images/bg-cinedrivein-halloween.png";
-import cineDriveinEaster from "../../../public/images/bg-cinedrivein-pascoa.png";
+import cineDrivein from "../../../public/images/ilustracao-drivein.png";
+import cineDriveinNatal from "../../../public/images/ilustracaonatal-drivein.png";
+import cineDriveinHalloween from "../../../public/images/ilustracaohalloween-drivein.png";
+import cineDriveinEaster from "../../../public/images/ilustracaopascoa-drivein.png";
 import { SeasonalEffects } from "@/components/seasonalEffects";
 import { useSiteConfig } from "@/hooks/useSiteConfig";
 
@@ -43,12 +43,7 @@ const eventBackgrounds: Record<EventType, string> = {
 
 export default function Hero() {
   const [currentEvent, setCurrentEvent] = useState<EventType>("default");
-  const [mounted, setMounted] = useState(false);
   const { data: siteConfig } = useSiteConfig();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   useEffect(() => {
     if (!siteConfig) return;
@@ -83,11 +78,7 @@ export default function Hero() {
   return (
     <section className="flex justify-center sm:gap-4 flex-wrap lg:flex-nowrap sm:min-h-[400px] w-11/12 sm:w-10/12 max-w-[1200px] mb-10 lg:my-20">
       <SeasonalEffects event={currentEvent} />
-      <div
-        className={`hidden lg:flex flex-col justify-center gap-2 w-[350px] transition-[opacity,transform] duration-700 ease-out ${
-          mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
-        }`}
-      >
+      <div className="hidden lg:flex flex-col justify-center gap-2 w-[350px] hero-enter">
         <h1 className="text-primary text-center lg:text-start font-bold text-5xl">
           PATRIMÔNIO CULTURAL
         </h1>
@@ -98,13 +89,9 @@ export default function Hero() {
           Projeto de Lei nº 6.055/2017
         </span>
       </div>
-      <div
-        className={`relative transition-[opacity,transform] duration-700 delay-150 ease-out ${
-          mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
-        }`}
-      >
+      <div className="relative hero-enter-delayed">
         <Image
-          className={`block w-[700px] bg-center ${eventShadow[currentEvent]} rounded-lg`}
+          className={`block w-[700px] bg-center ${eventShadow[currentEvent]} rounded-lg shadow-card`}
           src={background}
           width={700}
           height={500}

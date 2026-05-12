@@ -44,6 +44,25 @@ body.theme-easter {
   }
 }
 
+@keyframes heroReveal {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-enter {
+  animation: heroReveal 0.7s ease-out both;
+}
+
+.hero-enter-delayed {
+  animation: heroReveal 0.7s ease-out 0.15s both;
+}
+
 @keyframes emberFloat {
   0% {
     transform: translateY(0) translateX(0);
