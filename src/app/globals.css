@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --color-primary: #0088c2;
+}
+
 ::selection {
   background-color: #0088c2;
   color: white;
@@ -17,10 +21,66 @@ body {
   background-repeat: no-repeat;
   background-size: cover;
   background-attachment: fixed;
+  transition: background-color 0.8s ease;
+}
+
+body.theme-christmas {
+  --color-primary: #cc1e1e;
+  background-color: #e0eaf5;
+}
+
+body.theme-halloween {
+  --color-primary: #ff7800;
+  background-color: #1a1a2e;
+}
+
+body.theme-easter {
+  --color-primary: #c2348a;
+  background-color: #fdf6f0;
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+}
+
+@keyframes emberFloat {
+  0% {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.85;
+  }
+  50% {
+    transform: translateY(-45vh) translateX(18px);
+  }
+  85% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(-100vh) translateX(-10px);
+    opacity: 0;
+  }
+}
+
+@keyframes petalFloat {
+  0% {
+    transform: translateY(0) translateX(0) rotate(0deg);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.9;
+  }
+  50% {
+    transform: translateY(-40vh) translateX(22px) rotate(120deg);
+  }
+  85% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(-90vh) translateX(-12px) rotate(240deg);
+    opacity: 0;
   }
 }
