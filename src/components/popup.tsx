@@ -1,56 +1,32 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { SiteConfig } from "@/types/Types";
 import { useEffect, useState } from "react";
 import { CgClose } from "react-icons/cg";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "@/services/firebase";
+import { useSiteConfig } from "@/hooks/useSiteConfig";
 
 export default function Popup() {
   const [isOpen, setIsOpen] = useState(false);
-  const [popupInfo, setPopupInfo] = useState({
-    title: "",
-    messages: [] as string[],
-    image: "",
-  });
+  const { data: siteConfig } = useSiteConfig();
 
   useEffect(() => {
-    async function fetchPopUpInfo() {
-      try {
-        const ref = doc(db, "siteConfig", "main");
-        const snap = await getDoc(ref);
+    if (!siteConfig || !siteConfig.popUpEnabled) return;
 
-        if (!snap.exists()) return;
-
-        const config = snap.data() as SiteConfig;
-
-        if (!config.popUpEnabled) return;
-
-        setPopupInfo({
-          image: config.popUpImage ?? "",
-          title: config.popUpTitle ?? "",
-          messages: config.popUpDescriptions ?? [],
-        });
-
-        if (
-          config.popUpImage ||
-          config.popUpTitle ||
-          (config.popUpDescriptions && config.popUpDescriptions.length > 0)
-        ) {
-          setIsOpen(true);
-        }
-      } catch (error) {
-        console.error("Erro ao carregar popup:", error);
-      }
+    if (
+      siteConfig.popUpImage ||
+      siteConfig.popUpTitle ||
+      (siteConfig.popUpDescriptions && siteConfig.popUpDescriptions.length > 0)
+    ) {
+      setIsOpen(true);
     }
+  }, [siteConfig]);
 
-    fetchPopUpInfo();
-  }, []);
+  if (!isOpen || !siteConfig) return null;
 
-  if (!isOpen) return null;
-
-  const hasText = popupInfo.title || popupInfo.messages.length > 0;
+  const title = siteConfig.popUpTitle ?? "";
+  const messages = siteConfig.popUpDescriptions ?? [];
+  const image = siteConfig.popUpImage ?? "";
+  const hasText = title || messages.length > 0;
 
   return (
     <div
@@ -61,7 +37,6 @@ export default function Popup() {
         onClick={(e) => e.stopPropagation()}
         className="relative w-[90%] max-w-[480px] max-h-[90vh] rounded-2xl overflow-hidden shadow-2xl hover:cursor-default flex flex-col"
       >
-        {/* Botão fechar — sempre flutuando */}
         <button
           onClick={() => setIsOpen(false)}
           className="absolute top-3 right-3 z-20 bg-black/40 hover:bg-black/60 text-white rounded-full p-1.5 transition-all hover:cursor-pointer"
@@ -69,28 +44,26 @@ export default function Popup() {
           <CgClose size={16} />
         </button>
 
-        {/* Imagem */}
-        {popupInfo.image && (
+        {image && (
           <img
-            src={popupInfo.image}
-            alt={popupInfo.title || "Popup"}
+            src={image}
+            alt={title || "Popup"}
             className="w-full object-cover"
           />
         )}
 
-        {/* Rodapé minimalista — só aparece se tiver texto */}
         {hasText && (
           <div className="bg-white px-5 py-4 flex items-center justify-between gap-4">
             <div className="flex flex-col gap-0.5 min-w-0">
-              {popupInfo.title && (
+              {title && (
                 <span className="text-sm font-semibold text-stone-800 truncate">
-                  {popupInfo.title}
+                  {title}
                 </span>
               )}
 
-              {popupInfo.messages[0] && (
+              {messages[0] && (
                 <span className="text-xs text-stone-400 truncate">
-                  {popupInfo.messages[0]}
+                  {messages[0]}
                 </span>
               )}
             </div>

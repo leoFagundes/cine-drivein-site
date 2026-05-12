@@ -1,4 +1,6 @@
-import React, { ReactNode } from "react";
+"use client";
+
+import React, { ReactNode, useEffect, useRef, useState } from "react";
 
 interface SectionContainerProps {
   children: ReactNode;
@@ -13,10 +15,34 @@ export default function SectionContainer({
   subtitle,
   id = "",
 }: SectionContainerProps) {
+  const ref = useRef<HTMLElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <section
       id={id}
-      className="flex flex-col items-center gap-8 w-full my-8 relative"
+      ref={ref}
+      className={`flex flex-col items-center gap-8 w-full my-8 relative transition-[opacity,transform] duration-700 ease-out ${
+        visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+      }`}
     >
       <div className="flex flex-col gap-2">
         <h1 className="text-primary text-center text-4xl font-semibold">

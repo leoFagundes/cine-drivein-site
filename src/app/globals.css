@@ -20,7 +20,6 @@ body {
   background-image: url("/svg/cinema-bg.svg");
   background-repeat: no-repeat;
   background-size: cover;
-  background-attachment: fixed;
   transition: background-color 0.8s ease;
 }
 

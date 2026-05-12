@@ -59,8 +59,8 @@ export default function Header() {
 
   return (
     <>
-      <div className="h-[100px] bg-red-200 lg:h-[80px]" />
-      <section className="fixed flex justify-center w-full z-40 bg-secondary/85 backdrop-blur-sm">
+      <div className="h-[100px] lg:h-[80px]" />
+      <section className="fixed left-0 top-0 flex justify-center w-full z-40 bg-secondary/85 backdrop-blur-sm">
         <nav className="flex items-center justify-between h-20 py-4 w-11/12 sm:w-10/12 max-w-[1200px]">
           <Link href={"/"}>
             {" "}

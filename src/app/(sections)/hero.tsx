@@ -7,8 +7,7 @@ import cineDriveinNatal from "../../../public/images/bg-cinedrivein-natal.png";
 import cineDriveinHalloween from "../../../public/images/bg-cinedrivein-halloween.png";
 import cineDriveinEaster from "../../../public/images/bg-cinedrivein-pascoa.png";
 import { SeasonalEffects } from "@/components/seasonalEffects";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "@/services/firebase";
+import { useSiteConfig } from "@/hooks/useSiteConfig";
 
 type EventType = "default" | "christmas" | "halloween" | "easter";
 
@@ -35,52 +34,43 @@ const eventTitle: Record<EventType, string> = {
   easter: "🐣 Cine Drive-In — Especial de Páscoa",
 };
 
+const eventBackgrounds: Record<EventType, string> = {
+  default: cineDrivein.src,
+  christmas: cineDriveinNatal.src,
+  halloween: cineDriveinHalloween.src,
+  easter: cineDriveinEaster.src,
+};
+
 export default function Hero() {
   const [currentEvent, setCurrentEvent] = useState<EventType>("default");
-
-  const eventBackgrounds: Record<EventType, string> = {
-    default: cineDrivein.src,
-    christmas: cineDriveinNatal.src,
-    halloween: cineDriveinHalloween.src,
-    easter: cineDriveinEaster.src,
-  };
+  const [mounted, setMounted] = useState(false);
+  const { data: siteConfig } = useSiteConfig();
 
   useEffect(() => {
-    async function fetchEvent() {
-      try {
-        console.log("buscando config...");
-        const ref = doc(db, "siteConfig", "main");
-        const snap = await getDoc(ref);
-        console.log("SNAP:", snap.exists(), snap.data());
+    setMounted(true);
+  }, []);
 
-        if (!snap.exists()) {
-          console.warn("Config não encontrada");
-          return;
-        }
+  useEffect(() => {
+    if (!siteConfig) return;
 
-        const data = snap.data();
-        const event = data.isEvent;
-        const resolved: EventType = (
-          ["christmas", "halloween", "easter"] as string[]
-        ).includes(event)
-          ? (event as EventType)
-          : "default";
+    const event = siteConfig.isEvent;
+    const resolved: EventType = (
+      ["christmas", "halloween", "easter"] as string[]
+    ).includes(event)
+      ? (event as EventType)
+      : "default";
 
-        setCurrentEvent(resolved);
+    setCurrentEvent(resolved);
 
-        THEME_CLASSES.forEach((cls) => document.body.classList.remove(cls));
-        if (resolved !== "default") {
-          document.body.classList.add(`theme-${resolved}`);
-        }
-
-        document.title = eventTitle[resolved];
-      } catch (error) {
-        console.error("Erro ao buscar evento:", error);
-      }
+    THEME_CLASSES.forEach((cls) => document.body.classList.remove(cls));
+    if (resolved !== "default") {
+      document.body.classList.add(`theme-${resolved}`);
     }
 
-    fetchEvent();
+    document.title = eventTitle[resolved];
+  }, [siteConfig]);
 
+  useEffect(() => {
     return () => {
       THEME_CLASSES.forEach((cls) => document.body.classList.remove(cls));
       document.title = "Cine Drive-In";
@@ -93,7 +83,11 @@ export default function Hero() {
   return (
     <section className="flex justify-center sm:gap-4 flex-wrap lg:flex-nowrap sm:min-h-[400px] w-11/12 sm:w-10/12 max-w-[1200px] mb-10 lg:my-20">
       <SeasonalEffects event={currentEvent} />
-      <div className="hidden lg:flex flex-col justify-center gap-2 w-[350px]">
+      <div
+        className={`hidden lg:flex flex-col justify-center gap-2 w-[350px] transition-[opacity,transform] duration-700 ease-out ${
+          mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+        }`}
+      >
         <h1 className="text-primary text-center lg:text-start font-bold text-5xl">
           PATRIMÔNIO CULTURAL
         </h1>
@@ -104,13 +98,17 @@ export default function Hero() {
           Projeto de Lei nº 6.055/2017
         </span>
       </div>
-      <div className="relative">
+      <div
+        className={`relative transition-[opacity,transform] duration-700 delay-150 ease-out ${
+          mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
+        }`}
+      >
         <Image
           className={`block w-[700px] bg-center ${eventShadow[currentEvent]} rounded-lg`}
           src={background}
           width={700}
           height={500}
-          alt="teste"
+          alt="Cine Drive-In"
         />
         {badge && (
           <span className="absolute top-3 right-3 bg-black/50 backdrop-blur-sm text-white text-xs font-semibold px-3 py-1.5 rounded-full">
