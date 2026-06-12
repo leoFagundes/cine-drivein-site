@@ -2,7 +2,18 @@
   RewriteEngine On
   RewriteBase /
 
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^ index.html [L]
+  # Serve existing files and directories as-is
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # Remove trailing slash (ex: /advertiser/ -> /advertiser)
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^(.+)/$ /$1 [L,R=301]
+
+  # Map /path to /path.html when that file exists
+  RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI}.html -f
+  RewriteRule ^(.*)$ $1.html [L]
 </IfModule>
+
+ErrorDocument 404 /404.html
