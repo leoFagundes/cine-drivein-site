@@ -1,8 +1,20 @@
 import Link from "next/link";
+import {
+  FaDog,
+  FaCarSide,
+  FaShieldAlt,
+  FaBroadcastTower,
+  FaUtensils,
+  FaRestroom,
+  FaCarBattery,
+  FaEnvelope,
+} from "react-icons/fa";
+import RevealOnScroll from "@/components/revealOnScroll";
 
 export default function HowItWorks() {
   const items = [
     {
+      icon: FaDog,
       title: "Experiência Única no Cine Drive-in",
       description: (
         <>
@@ -17,6 +29,7 @@ export default function HowItWorks() {
       ),
     },
     {
+      icon: FaCarSide,
       title: "Cuidados com os Faróis",
       description: (
         <>
@@ -29,6 +42,7 @@ export default function HowItWorks() {
       ),
     },
     {
+      icon: FaShieldAlt,
       title: "Segurança no Estacionamento",
       description: (
         <>
@@ -40,6 +54,7 @@ export default function HowItWorks() {
       ),
     },
     {
+      icon: FaBroadcastTower,
       title: "Como faço para escutar o filme?",
       description: (
         <>
@@ -53,6 +68,7 @@ export default function HowItWorks() {
       ),
     },
     {
+      icon: FaUtensils,
       title: "Lanchonete e Cardápio",
       description: (
         <>
@@ -72,6 +88,7 @@ export default function HowItWorks() {
       ),
     },
     {
+      icon: FaRestroom,
       title: "Banheiros de Fácil Acesso",
       description: (
         <>
@@ -85,6 +102,7 @@ export default function HowItWorks() {
       ),
     },
     {
+      icon: FaCarBattery,
       title: "Serviço de Auxílio de Bateria",
       description: (
         <>
@@ -97,6 +115,7 @@ export default function HowItWorks() {
       ),
     },
     {
+      icon: FaEnvelope,
       title: "Dúvidas ou Sugestões?",
       description: (
         <>
@@ -118,13 +137,24 @@ export default function HowItWorks() {
 
   return (
     <section className="flex flex-col gap-6 w-11/12 sm:w-10/12 max-w-[1200px] my-8">
-      <h1 className="text-4xl font-semibold text-primary">Como funcionamos?</h1>
-      {items.map(({ title, description }, index) => (
-        <article className="flex flex-col gap-2" key={index}>
-          <h3 className="text-primary font-semibold text-xl">{title}</h3>
-          <p className="font-medium text-sm">{description}</p>
-        </article>
-      ))}
+      <RevealOnScroll>
+        <h1 className="text-4xl font-semibold text-primary text-center sm:text-left">
+          Como funcionamos?
+        </h1>
+      </RevealOnScroll>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {items.map(({ icon: Icon, title, description }, index) => (
+          <RevealOnScroll key={index} delay={index * 75}>
+            <article className="bg-white shadow-card rounded-lg p-6 flex flex-col gap-2 h-full">
+              <div className="flex items-center gap-3">
+                <Icon className="text-primary" size={"24px"} />
+                <h3 className="text-primary font-semibold text-xl">{title}</h3>
+              </div>
+              <p className="font-medium text-sm">{description}</p>
+            </article>
+          </RevealOnScroll>
+        ))}
+      </div>
     </section>
   );
 }

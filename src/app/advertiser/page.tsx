@@ -1,7 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
-import { FaLocationDot, FaFilm } from "react-icons/fa6";
+import {
+  FaLocationDot,
+  FaFilm,
+  FaUserGroup,
+  FaCalendarDays,
+} from "react-icons/fa6";
 import { FaDesktop, FaCar } from "react-icons/fa";
 import Link from "next/link";
+import RevealOnScroll from "@/components/revealOnScroll";
 
 export default function BecomeAnAdvertiser() {
   return (
@@ -19,13 +25,15 @@ export default function BecomeAnAdvertiser() {
         />
       </div> */}
 
-      <img
-        className="shadow-card rounded-lg contrast-[1.1] brightness-110 saturate-[1.1]"
-        src={"/images/cine-drivein.png"}
-        alt={"Cine Drive-in"}
-      />
+      <RevealOnScroll>
+        <img
+          className="shadow-card rounded-lg contrast-[1.1] brightness-110 saturate-[1.1]"
+          src={"/images/cine-drivein.png"}
+          alt={"Cine Drive-in"}
+        />
+      </RevealOnScroll>
 
-      <div className="relative">
+      <RevealOnScroll delay={100} className="relative">
         <div className="flex gap-4 flex-col w-full md:w-[60%]">
           <h1 className="text-center self-center text-primary font-semibold text-3xl">
             SUA EMPRESA NO CINEMA
@@ -68,9 +76,12 @@ export default function BecomeAnAdvertiser() {
           src={"/images/cine-location.png"}
           alt={"Cine Drive-in"}
         />
-      </div>
+      </RevealOnScroll>
 
-      <div className="flex justify-center lg:justify-between gap-4 text-center font-semibold text-xs sm:text-sm my-6">
+      <RevealOnScroll
+        delay={150}
+        className="flex justify-center lg:justify-between gap-4 text-center font-semibold text-xs sm:text-sm my-6 w-full"
+      >
         <div className="flex flex-col items-center justify-center gap-2 max-w-[300px]">
           <FaLocationDot size={"32px"} className="text-primary" />
           <p>Ótima localização e fácil acesso, no coração de Brasília</p>
@@ -86,32 +97,63 @@ export default function BecomeAnAdvertiser() {
             pessoas
           </p>
         </div>
-      </div>
+      </RevealOnScroll>
 
       <hr className="text-primary" />
 
-      <div className="flex flex-col gap-6 my-6">
+      <RevealOnScroll className="flex flex-col gap-6 my-6 w-full">
         <h1 className="text-center self-center text-primary font-semibold text-3xl">
           EMPRESAS QUE JÁ ANUNCIARAM
         </h1>
-        <div className="grid grid-cols-4 grid-rows-2 md:grid-rows-1 md:grid-cols-8 gap-8 items-center w-full">
-          <img src={"/images/organizations/amil.png"} alt={"amil"} />
-          <img
-            src={"/images/organizations/clubeTerapia.png"}
-            alt={"clubeTerapia"}
-          />
-          <img src={"/images/organizations/drogavet.png"} alt={"drogavet"} />
-          <img src={"/images/organizations/gov.png"} alt={"gov"} />
-          <img src={"/images/organizations/honda.png"} alt={"honda"} />
-          <img src={"/images/organizations/jaguar.png"} alt={"jaguar"} />
-          <img src={"/images/organizations/medcar.png"} alt={"medcar"} />
-          <img src={"/images/organizations/wizard.png"} alt={"wizard"} />
+        <div className="bg-white shadow-card rounded-2xl p-6 sm:p-10">
+          <div className="grid grid-cols-4 grid-rows-2 md:grid-rows-1 md:grid-cols-8 gap-8 items-center w-full">
+            <img
+              className="grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all duration-300"
+              src={"/images/organizations/amil.png"}
+              alt={"amil"}
+            />
+            <img
+              className="grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all duration-300"
+              src={"/images/organizations/clubeTerapia.png"}
+              alt={"clubeTerapia"}
+            />
+            <img
+              className="grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all duration-300"
+              src={"/images/organizations/drogavet.png"}
+              alt={"drogavet"}
+            />
+            <img
+              className="grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all duration-300"
+              src={"/images/organizations/gov.png"}
+              alt={"gov"}
+            />
+            <img
+              className="grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all duration-300"
+              src={"/images/organizations/honda.png"}
+              alt={"honda"}
+            />
+            <img
+              className="grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all duration-300"
+              src={"/images/organizations/jaguar.png"}
+              alt={"jaguar"}
+            />
+            <img
+              className="grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all duration-300"
+              src={"/images/organizations/medcar.png"}
+              alt={"medcar"}
+            />
+            <img
+              className="grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all duration-300"
+              src={"/images/organizations/wizard.png"}
+              alt={"wizard"}
+            />
+          </div>
         </div>
-      </div>
+      </RevealOnScroll>
 
       <hr className="text-primary" />
 
-      <div className="flex justify-center flex-wrap-reverse items-center gap-8 my-6">
+      <RevealOnScroll className="flex justify-center flex-wrap-reverse items-center gap-8 my-6 w-full">
         <div className="flex flex-col gap-4 max-w-full lg:max-w-[300px]">
           <h3 className="text-primary font-bold text-xl">
             O cinema é o tema do premiado longa metragem, “O último Cine Drive
@@ -132,79 +174,83 @@ export default function BecomeAnAdvertiser() {
           referrerPolicy="strict-origin-when-cross-origin"
           allowFullScreen
         ></iframe>
-      </div>
+      </RevealOnScroll>
 
       <hr className="text-primary" />
 
-      <div className="flex flex-col items-center gap-3 my-6">
-        <h1 className="text-center self-center text-primary font-semibold text-3xl">
-          NOSSOS FILMES
-        </h1>
-        <p className="text-center font-medium max-w-[600px]">
-          Os filmes exibidos são, geralmente, voltados para a família e casais,
-          com filmes de animação e comédias românticas.
-        </p>
-        <p className="text-center text-lg font-semibold max-w-[600px]">
-          O Cine Drive-in conta atualmente com três sessões:
-        </p>
-        <div className="grid grid-cols-3 items-center gap-3 text-center mt-4">
-          <div className="flex flex-col items-center justify-center gap-1 max-w-[200px]">
+      <RevealOnScroll className="flex flex-col items-center gap-6 my-6 w-full">
+        <div className="flex flex-col items-center gap-3">
+          <h1 className="text-center self-center text-primary font-semibold text-3xl">
+            NOSSOS FILMES
+          </h1>
+          <p className="text-center font-medium max-w-[600px]">
+            Os filmes exibidos são, geralmente, voltados para a família e
+            casais, com filmes de animação e comédias românticas.
+          </p>
+          <p className="text-center text-lg font-semibold max-w-[600px]">
+            O Cine Drive-in conta atualmente com três sessões:
+          </p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
+          <div className="bg-white shadow-card rounded-lg p-6 flex flex-col items-center text-center gap-2">
             <FaFilm size={"32px"} className="text-primary" />
-            <p className="font-semibold">18:30</p>
-            <p className="text-sm max-w-[250px]">
+            <p className="text-2xl font-bold text-primary">18:30</p>
+            <p className="text-sm font-medium">
               <i>Filmes para o público infantil e familiar</i>
             </p>
           </div>
-          <div className="flex flex-col items-center justify-center gap-1 max-w-[200px]">
+          <div className="bg-white shadow-card rounded-lg p-6 flex flex-col items-center text-center gap-2">
             <FaFilm size={"32px"} className="text-primary" />
-            <p className="font-semibold">20:20</p>
-            <p className="text-sm max-w-[250px]">
+            <p className="text-2xl font-bold text-primary">20:20</p>
+            <p className="text-sm font-medium">
               <i>Filmes para público jovem/adulto</i>
             </p>
           </div>
-          <div className="flex flex-col items-center justify-center gap-1 max-w-[200px]">
+          <div className="bg-white shadow-card rounded-lg p-6 flex flex-col items-center text-center gap-2">
             <FaFilm size={"32px"} className="text-primary" />
-            <p className="font-semibold">22:10</p>
-            <p className="text-sm max-w-[250px]">
+            <p className="text-2xl font-bold text-primary">22:10</p>
+            <p className="text-sm font-medium">
               <i>Filmes para público jovem/adulto</i>
             </p>
           </div>
         </div>
-      </div>
+      </RevealOnScroll>
 
       <hr className="text-primary" />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-6">
-        <img className="hidden md:block" src="images/people.png" alt="people" />
-        <article className="flex flex-col gap-2">
-          <h1 className="text-center self-center text-primary font-semibold text-3xl">
-            PÚBLICO ATUAL
-          </h1>
-          <article className="flex items-center flex-1">
-            <p>
-              <span className="font-semibold">
-                {" "}
-                Público presencial no cinema está entre 6 a 8 mil pessoas por
-                mês.
-              </span>
-              <br />
-              <br />A principal faixa etária para os filmes adultos está entre{" "}
-              <span className="font-semibold">20 e 50</span> anos. Nos filmes
-              infantis sempre há muitas crianças com seus familiares.
-              <br />
-              <br />O número de carros está entre{" "}
-              <span className="font-semibold">1500 e 2000 ao mês</span>, ou
-              seja, de{" "}
-              <span className="font-semibold">375 a 500 carros por semana</span>
-              .
+      <RevealOnScroll className="flex flex-col gap-6 my-6 w-full">
+        <h1 className="text-center self-center text-primary font-semibold text-3xl">
+          PÚBLICO ATUAL
+        </h1>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="bg-white shadow-card rounded-lg p-6 flex flex-col items-center text-center gap-2">
+            <FaUserGroup size={"32px"} className="text-primary" />
+            <p className="text-2xl font-bold text-primary">6 a 8 mil</p>
+            <p className="text-sm font-medium">
+              pessoas circulam pelo cinema por mês
             </p>
-          </article>
-        </article>
-      </div>
+          </div>
+          <div className="bg-white shadow-card rounded-lg p-6 flex flex-col items-center text-center gap-2">
+            <FaCalendarDays size={"32px"} className="text-primary" />
+            <p className="text-2xl font-bold text-primary">20 a 50 anos</p>
+            <p className="text-sm font-medium">
+              faixa etária principal nos filmes adultos, além de muitas crianças
+              e famílias nas sessões infantis
+            </p>
+          </div>
+          <div className="bg-white shadow-card rounded-lg p-6 flex flex-col items-center text-center gap-2">
+            <FaCar size={"32px"} className="text-primary" />
+            <p className="text-2xl font-bold text-primary">1.500 a 2.000</p>
+            <p className="text-sm font-medium">
+              carros por mês, ou seja, de 375 a 500 carros por semana
+            </p>
+          </div>
+        </div>
+      </RevealOnScroll>
 
       <hr className="text-primary" />
 
-      <div className="flex flex-col gap-4">
+      <RevealOnScroll className="flex flex-col gap-4 w-full">
         <h1 className="text-center self-center text-primary font-semibold text-3xl">
           ENTRE EM CONTATO
         </h1>
@@ -215,7 +261,7 @@ export default function BecomeAnAdvertiser() {
           entre em contato conosco:
         </p>
         <Link
-          className="font-semibold text-lg text-primary self-center underline sm:decoration-transparent sm:hover:decoration-inherit sm:hover:underline"
+          className="bg-color-primary shadow-lg px-3 py-2 rounded-xl font-semibold text-lg text-white self-center underline sm:decoration-transparent sm:hover:decoration-inherit sm:hover:underline"
           href="mailto:cinedrivein@cinedrivein.com"
           target="_blank"
         >
@@ -225,7 +271,7 @@ export default function BecomeAnAdvertiser() {
           Estamos prontos para discutir as melhores opções de parceria para
           você!
         </p>
-      </div>
+      </RevealOnScroll>
     </section>
   );
 }

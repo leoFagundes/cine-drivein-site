@@ -46,10 +46,15 @@ export default function DriveinFilm() {
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <div
           onClick={(e) => e.stopPropagation()}
-          className="h-full w-full max-w-[500px] bg-contain bg-no-repeat bg-center"
-          style={{ backgroundImage: `url(${history.src})` }}
-        />
-        <div className="hover:cursor-pointer absolute top-4 right-8 flex items-center gap-4">
+          className="relative max-h-[88vh] max-w-[92vw] overflow-y-auto rounded-lg shadow-2xl"
+        >
+          <img
+            src={history.src}
+            alt="Nossa história"
+            className="block w-auto max-w-full h-auto"
+          />
+        </div>
+        <div className="hover:cursor-pointer fixed top-4 right-8 flex items-center gap-4">
           <a
             className="h-full"
             href="/images/history.png"

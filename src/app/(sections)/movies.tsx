@@ -8,6 +8,7 @@ import { Film } from "@/types/Types";
 import Image from "next/image";
 import { IoWarning, IoReload } from "react-icons/io5";
 import { BiError } from "react-icons/bi";
+import { FaCirclePlay } from "react-icons/fa6";
 import Button from "@/components/button";
 import { useSiteConfig } from "@/hooks/useSiteConfig";
 
@@ -145,6 +146,18 @@ export default function Movies() {
                   alt={title}
                   className="w-[350px] h-[500px] rounded-lg shadow-md sm:group-hover:scale-110 duration-500"
                 />
+                <div className="hidden sm:flex absolute inset-0 flex-col justify-end p-4 bg-gradient-to-t from-black/85 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <p className="text-white font-bold text-lg leading-snug">
+                    {title}
+                  </p>
+                  <p className="text-white/80 text-sm font-medium">
+                    {showtime}
+                  </p>
+                  <span className="mt-2 inline-flex items-center gap-1.5 text-white text-xs font-semibold">
+                    <FaCirclePlay size={14} />
+                    Ver detalhes
+                  </span>
+                </div>
                 {(film.avisos ?? []).length > 0 && (
                   <div className="flex flex-col gap-1.5 mt-1 absolute bottom-2 right-2">
                     {(film.avisos ?? []).map((aviso, i) => (

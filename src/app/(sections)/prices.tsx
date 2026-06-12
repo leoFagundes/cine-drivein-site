@@ -80,18 +80,16 @@ export default function Prices() {
           </article>
 
           <article className="flex flex-col gap-3 mt-2 text-xs sm:text-sm">
-            <div className="flex flex-col sm:flex-row gap-2 max-w-80">
-              <FaLink className="min-w-6" color="#0088C2" size="18px" />
-              <Link
-                target="_blank"
-                href={
-                  "https://www.veloxtickets.com/Portal/Ingresso/Cinema/Brasilia"
-                }
-                className="font-semibold text-primary hover:cursor-pointer underline sm:decoration-transparent sm:hover:decoration-inherit sm:hover:underline"
-              >
-                Vendas online no Velox Tickets
-              </Link>
-            </div>
+            <Link
+              target="_blank"
+              href={
+                "https://www.veloxtickets.com/Portal/Ingresso/Cinema/Brasilia"
+              }
+              className="flex items-center justify-center gap-2 max-w-80 bg-color-primary text-white font-semibold rounded-md px-4 py-2.5 shadow-sm"
+            >
+              <FaLink size="18px" />
+              Vendas online no Velox Tickets
+            </Link>
             <div className="flex flex-col sm:flex-row gap-2 max-w-80">
               <FaCircleInfo className="min-w-6" color="#0088C2" size="20px" />
               <p className="font-semibold">

@@ -90,28 +90,34 @@ export default function Hero() {
         </span>
       </div>
       <div className="relative hero-enter-delayed">
-        <Image
-          className={`block w-[700px] bg-center ${eventShadow[currentEvent]} rounded-lg shadow-card`}
-          src={background}
-          width={700}
-          height={500}
-          alt="Cine Drive-In"
-        />
-        {badge && (
-          <span className="absolute top-3 right-3 bg-black/50 backdrop-blur-sm text-white text-xs font-semibold px-3 py-1.5 rounded-full">
-            {badge}
-          </span>
-        )}
-        <div className="lg:hidden mt-3 flex gap-1 flex-col items-center text-center">
-          <div>
-            <p className="font-bold text-primary text-xl">
-              PATRIMÔNIO CULTURAL
+        <div
+          className={`relative rounded-lg overflow-hidden shadow-card ${eventShadow[currentEvent]}`}
+        >
+          <Image
+            className="block w-[700px] max-w-full bg-center"
+            src={background}
+            width={700}
+            height={500}
+            alt="Cine Drive-In"
+          />
+          {badge && (
+            <span className="absolute top-3 right-3 bg-black/50 backdrop-blur-sm text-white text-xs font-semibold px-3 py-1.5 rounded-full">
+              {badge}
+            </span>
+          )}
+          <div className="lg:hidden absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent pt-12 pb-4 px-4 flex gap-1 flex-col items-center text-center">
+            <div>
+              <p className="font-bold text-white text-xl drop-shadow-sm">
+                PATRIMÔNIO CULTURAL
+              </p>
+              <p className="text-base italic font-medium text-white/90 drop-shadow-sm">
+                Do Distrito Federal
+              </p>
+            </div>
+            <p className="text-white text-center text-sm font-semibold italic drop-shadow-sm">
+              Projeto de Lei nº 6.055/2017
             </p>
-            <p className="text-base italic font-medium">Do Distrito Federal</p>
           </div>
-          <p className="text-primary text-center text-sm font-semibold italic">
-            Projeto de Lei nº 6.055/2017
-          </p>
         </div>
       </div>
     </section>

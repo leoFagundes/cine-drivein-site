@@ -60,3 +60,9 @@ export type Schedule = {
   closingTime: string;
   openingTime: string;
 };
+
+export interface Feedback {
+  name?: string;
+  rating: number;
+  message: string;
+}
