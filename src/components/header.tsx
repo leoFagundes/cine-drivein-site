@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import classNames from "classnames";
 import { AnimatePresence, motion, Variants } from "framer-motion";
 import {
@@ -48,13 +48,24 @@ const itemVariants: Variants = {
 
 export default function Header() {
   const [opened, setOpened] = useState(false);
+  const [hasMoreScroll, setHasMoreScroll] = useState(false);
+  const listRef = useRef<HTMLUListElement>(null);
   const pathname = usePathname();
+
+  function checkScroll() {
+    const el = listRef.current;
+    if (!el) return;
+    setHasMoreScroll(el.scrollTop + el.clientHeight < el.scrollHeight - 4);
+  }
 
   useEffect(() => {
     document.body.style.overflow = opened ? "hidden" : "";
+    if (opened) setTimeout(() => checkScroll(), 180);
+    else setHasMoreScroll(false);
     return () => {
       document.body.style.overflow = "";
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [opened]);
 
   const items = [
@@ -177,45 +188,53 @@ export default function Header() {
                 </button>
               </div>
 
-              <motion.ul
-                variants={listVariants}
-                initial="hidden"
-                animate="visible"
-                className="flex flex-col gap-1 p-3"
-              >
-                {items.map((item) => {
-                  const isActive = pathname === item.link;
+              <div className="relative flex-1 min-h-0">
+                <motion.ul
+                  ref={listRef}
+                  onScroll={checkScroll}
+                  variants={listVariants}
+                  initial="hidden"
+                  animate="visible"
+                  className="flex flex-col gap-1 p-3 h-full overflow-y-auto"
+                >
+                  {items.map((item) => {
+                    const isActive = pathname === item.link;
 
-                  return (
-                    <motion.li key={item.key} variants={itemVariants}>
-                      <Link
-                        className={classNames(
-                          "flex items-center gap-3.5 px-4 py-3.5 rounded-2xl font-semibold text-sm transition-colors duration-150",
-                          isActive
-                            ? "bg-color-primary/10 text-color-primary"
-                            : "text-stone-700 hover:bg-stone-100",
-                        )}
-                        href={item.link}
-                        onClick={() => setOpened(false)}
-                      >
-                        <span
+                    return (
+                      <motion.li key={item.key} variants={itemVariants}>
+                        <Link
                           className={classNames(
-                            "flex items-center justify-center w-10 h-10 rounded-full",
+                            "flex items-center gap-3.5 px-4 py-3.5 rounded-2xl font-semibold text-sm transition-colors duration-150",
                             isActive
-                              ? "bg-color-primary text-white"
-                              : "bg-stone-100 text-color-primary",
+                              ? "bg-color-primary/10 text-color-primary"
+                              : "text-stone-700 hover:bg-stone-100",
                           )}
+                          href={item.link}
+                          onClick={() => setOpened(false)}
                         >
-                          {item.icon}
-                        </span>
-                        {item.label}
-                      </Link>
-                    </motion.li>
-                  );
-                })}
-              </motion.ul>
+                          <span
+                            className={classNames(
+                              "flex items-center justify-center w-10 h-10 rounded-full",
+                              isActive
+                                ? "bg-color-primary text-white"
+                                : "bg-stone-100 text-color-primary",
+                            )}
+                          >
+                            {item.icon}
+                          </span>
+                          {item.label}
+                        </Link>
+                      </motion.li>
+                    );
+                  })}
+                </motion.ul>
 
-              <div className="mt-auto px-5 py-5 border-t border-gray/10 text-center">
+                {hasMoreScroll && (
+                  <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-14 bg-gradient-to-t from-white to-transparent" />
+                )}
+              </div>
+
+              <div className="shrink-0 px-5 py-5 border-t border-gray/10 text-center">
                 <p className="text-xs text-stone-400 font-medium">
                   Cine Drive-In • Brasília
                 </p>

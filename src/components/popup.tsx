@@ -9,7 +9,6 @@ const HIDE_POPUP_STORAGE_KEY = "hidePopupUntil";
 
 export default function Popup() {
   const [isOpen, setIsOpen] = useState(false);
-  const [dontShowAgain, setDontShowAgain] = useState(false);
   const { data: siteConfig } = useSiteConfig();
 
   useEffect(() => {
@@ -27,11 +26,11 @@ export default function Popup() {
     }
   }, [siteConfig]);
 
-  const handleClose = () => {
-    if (dontShowAgain) {
-      const oneHourFromNow = Date.now() + 60 * 60 * 1000;
-      localStorage.setItem(HIDE_POPUP_STORAGE_KEY, String(oneHourFromNow));
-    }
+  const handleClose = () => setIsOpen(false);
+
+  const handleDontShowAgain = () => {
+    const oneHourFromNow = Date.now() + 60 * 60 * 1000;
+    localStorage.setItem(HIDE_POPUP_STORAGE_KEY, String(oneHourFromNow));
     setIsOpen(false);
   };
 
@@ -91,28 +90,22 @@ export default function Popup() {
               </button>
             </div>
 
-            <label className="flex items-center gap-1.5 text-[11px] text-stone-300 hover:text-stone-400 transition-colors hover:cursor-pointer select-none w-fit">
-              <input
-                type="checkbox"
-                checked={dontShowAgain}
-                onChange={(e) => setDontShowAgain(e.target.checked)}
-                className="h-3 w-3 accent-stone-400 hover:cursor-pointer"
-              />
+            <button
+              onClick={handleDontShowAgain}
+              className="text-[11px] text-stone-300 hover:text-stone-500 transition-colors text-left py-1 cursor-pointer"
+            >
               Não mostrar novamente por 1 hora
-            </label>
+            </button>
           </div>
         )}
 
         {!hasText && (
-          <label className="absolute bottom-2 left-2 z-20 flex items-center gap-1.5 text-[11px] text-white/70 hover:text-white transition-colors hover:cursor-pointer select-none bg-black/30 rounded-full px-2.5 py-1">
-            <input
-              type="checkbox"
-              checked={dontShowAgain}
-              onChange={(e) => setDontShowAgain(e.target.checked)}
-              className="h-3 w-3 accent-white hover:cursor-pointer"
-            />
+          <button
+            onClick={handleDontShowAgain}
+            className="absolute bottom-3 left-3 z-20 text-[11px] text-white/80 hover:text-white transition-colors bg-black/40 rounded-full px-3 py-1.5 cursor-pointer"
+          >
             Não mostrar novamente por 1 hora
-          </label>
+          </button>
         )}
       </div>
     </div>
