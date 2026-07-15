@@ -1,4 +1,4 @@
-import { doc, getDoc, increment, setDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, increment, setDoc, updateDoc, FieldValue } from "firebase/firestore";
 import { db } from "@/services/firebase";
 
 // ─── Enable/disable flag ──────────────────────────────────────────────────────
@@ -65,8 +65,7 @@ export async function trackEvent(event: AnalyticsEvent): Promise<void> {
   if (typeof window === "undefined") return;
   if (!(await isEnabled())) return;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const updates: Record<string, any> = {};
+  const updates: Record<string, FieldValue> = {};
 
   if (event.type === "visit") {
     if (sessionCounted()) return;
