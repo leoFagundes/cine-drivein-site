@@ -5,6 +5,7 @@ import SectionContainer from "../../containers/sectionContainer";
 import ticket from "../../../public/images/ticket.png";
 import { IoRestaurantOutline } from "react-icons/io5";
 import CardapioModal from "@/components/cardapioModal";
+import { trackEvent } from "@/lib/analytics";
 
 export default function Snack() {
   const [cardapioOpen, setCardapioOpen] = useState(false);
@@ -39,7 +40,10 @@ export default function Snack() {
               <br />
 
               <button
-                onClick={() => setCardapioOpen(true)}
+                onClick={() => {
+                  setCardapioOpen(true);
+                  void trackEvent({ type: "pageClick", key: "cardapio" });
+                }}
                 className="flex items-center gap-2 px-5 py-3 rounded-xl font-bold text-sm text-white transition-all duration-200 hover:opacity-90 hover:scale-105 active:scale-95 cursor-pointer shadow-md"
                 style={{ backgroundColor: "var(--color-primary)" }}
               >

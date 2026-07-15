@@ -6,6 +6,7 @@ import { FaCircleInfo } from "react-icons/fa6";
 import ticket from "../../../public/images/ticket.png";
 import Link from "next/link";
 import { useSiteConfig } from "@/hooks/useSiteConfig";
+import { trackEvent } from "@/lib/analytics";
 
 export default function Prices() {
   const { data: siteConfig } = useSiteConfig();
@@ -85,6 +86,7 @@ export default function Prices() {
               href={
                 "https://www.veloxtickets.com/Portal/Ingresso/Cinema/Brasilia"
               }
+              onClick={() => void trackEvent({ type: "pageClick", key: "vendasOnline" })}
               className="flex items-center justify-center gap-2 max-w-80 bg-color-primary text-white font-semibold rounded-md px-4 py-2.5 shadow-sm"
             >
               <FaLink size="18px" />

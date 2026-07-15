@@ -16,6 +16,7 @@ import {
   IoClose,
 } from "react-icons/io5";
 import { usePathname } from "next/navigation";
+import { trackEvent, PageClickKey } from "@/lib/analytics";
 
 const overlayVariants: Variants = {
   hidden: { opacity: 0 },
@@ -44,6 +45,12 @@ const listVariants: Variants = {
 const itemVariants: Variants = {
   hidden: { opacity: 0, x: 24 },
   visible: { opacity: 1, x: 0 },
+};
+
+const ANALYTICS_KEYS: Record<string, PageClickKey> = {
+  "how-it-works": "comoFunciona",
+  "advertiser":   "anunciante",
+  "feedback":     "avaliacao",
 };
 
 export default function Header() {
@@ -128,7 +135,11 @@ export default function Header() {
               <li
                 key={item.key}
                 className="text-xs hover:opacity-70"
-                onClick={() => setOpened(false)}
+                onClick={() => {
+                  setOpened(false);
+                  const aKey = ANALYTICS_KEYS[item.key];
+                  if (aKey) void trackEvent({ type: "pageClick", key: aKey });
+                }}
               >
                 <Link href={item.link}>{item.label}</Link>
               </li>
@@ -210,7 +221,11 @@ export default function Header() {
                               : "text-stone-700 hover:bg-stone-100",
                           )}
                           href={item.link}
-                          onClick={() => setOpened(false)}
+                          onClick={() => {
+                            setOpened(false);
+                            const aKey = ANALYTICS_KEYS[item.key];
+                            if (aKey) void trackEvent({ type: "pageClick", key: aKey });
+                          }}
                         >
                           <span
                             className={classNames(

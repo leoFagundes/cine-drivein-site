@@ -11,6 +11,7 @@ import { BiError } from "react-icons/bi";
 import { FaCirclePlay } from "react-icons/fa6";
 import Button from "@/components/button";
 import { useSiteConfig } from "@/hooks/useSiteConfig";
+import { trackEvent } from "@/lib/analytics";
 
 type FilmWithSession = Film & {
   sessionKey: string;
@@ -137,7 +138,10 @@ export default function Movies() {
           return (
             <div
               key={index}
-              onClick={() => router.push(`/film/detail/${film.sessionKey}`)}
+              onClick={() => {
+                void trackEvent({ type: "filmClick", filmName: title, session: film.sessionKey });
+                router.push(`/film/detail/${film.sessionKey}`);
+              }}
               className="w-[350px] group contrast-[1.1] hover:cursor-pointer duration-200"
             >
               <div className="relative overflow-hidden rounded-lg shadow-card">
@@ -159,7 +163,7 @@ export default function Movies() {
                   </span>
                 </div>
                 {(film.avisos ?? []).length > 0 && (
-                  <div className="flex flex-col gap-1.5 mt-1 absolute bottom-2 right-2">
+                  <div className="flex flex-col gap-1.5 ml-2 mt-1 absolute bottom-2 right-2 transition-transform duration-300 sm:group-hover:-translate-y-24">
                     {(film.avisos ?? []).map((aviso, i) => (
                       <div
                         key={i}

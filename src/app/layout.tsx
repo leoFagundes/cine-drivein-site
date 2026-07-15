@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import ScrollUp from "@/components/scrollUp";
+import AnalyticsProvider from "@/components/analyticsProvider";
 
 const montserrat = Montserrat({ subsets: ["latin"] });
 
@@ -23,6 +24,7 @@ export default function RootLayout({
       <body
         className={`${montserrat.className} w-screen bg-primary flex flex-col items-center text-gray min-h-screen overflow-x-hidden`}
       >
+        <AnalyticsProvider />
         <Header />
         <section className="flex justify-center w-full">{children}</section>
         <Footer />

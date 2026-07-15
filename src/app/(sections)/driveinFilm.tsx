@@ -8,6 +8,7 @@ import Modal from "@/components/modal";
 import { FaExpand } from "react-icons/fa";
 import { IoMdClose } from "react-icons/io";
 import history from "../../../public/images/history.png";
+import { trackEvent } from "@/lib/analytics";
 
 export default function DriveinFilm() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -37,7 +38,10 @@ export default function DriveinFilm() {
         </p>
 
         <p
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => {
+            setIsModalOpen(true);
+            void trackEvent({ type: "pageClick", key: "historia" });
+          }}
           className="font-semibold text-primary self-start hover:cursor-pointer underline sm:decoration-transparent sm:hover:decoration-inherit sm:hover:underline"
         >
           Conheça um pouco mais da nossa história!

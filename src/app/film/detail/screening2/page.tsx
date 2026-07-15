@@ -7,10 +7,13 @@ import React, { useEffect, useState } from "react";
 import FilmLayout from "../filmLayout";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "@/services/firebase";
+import { useRouter } from "next/navigation";
 
 export default function FilmDetails() {
   const [data, setData] = useState<Film | undefined>(undefined);
   const [loading, setLoading] = useState(false);
+
+  const router = useRouter();
 
   useEffect(() => {
     async function fetchFilm() {
@@ -29,7 +32,7 @@ export default function FilmDetails() {
         const film = config.session2;
 
         if (!film) {
-          throw new Error("session1 não encontrada");
+          throw new Error("sessio2 não encontrada");
         }
 
         let embedUrl = film.trailer;
@@ -45,6 +48,7 @@ export default function FilmDetails() {
         });
       } catch (error) {
         console.error("Erro ao carregar filme", error);
+        router.push("/error");
       } finally {
         setLoading(false);
       }
