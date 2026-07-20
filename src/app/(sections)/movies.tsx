@@ -7,10 +7,13 @@ import { useRouter } from "next/navigation";
 import { Film } from "@/types/Types";
 import Image from "next/image";
 import { IoWarning, IoReload } from "react-icons/io5";
-import { BiError } from "react-icons/bi";
+import { BiError, BiCalendarX } from "react-icons/bi";
+import { FiX } from "react-icons/fi";
 import { FaCirclePlay } from "react-icons/fa6";
 import Button from "@/components/button";
 import { useSiteConfig } from "@/hooks/useSiteConfig";
+import { useCinemaClosure } from "@/hooks/useCinemaClosure";
+import { formatScheduleWindow } from "@/lib/closureSchedule";
 import { trackEvent } from "@/lib/analytics";
 
 type FilmWithSession = Film & {
@@ -20,9 +23,13 @@ type FilmWithSession = Film & {
 export default function Movies() {
   const [data, setData] = useState<FilmWithSession[] | undefined>(undefined);
   const [containerWidth, setContainerWidth] = useState(1000);
-  const [isClosedToday, setIsClosedToday] = useState(false);
   const [isWarnClosedOpen, setIsWarnClosedOpen] = useState(false);
+  const [dismissedUpcomingId, setDismissedUpcomingId] = useState<string | null>(
+    null,
+  );
   const { data: siteConfig, loading, error, reload } = useSiteConfig();
+  const { closed: isClosedToday, reason: closureReason, upcoming } =
+    useCinemaClosure(siteConfig);
   const router = useRouter();
 
   useEffect(() => {
@@ -44,9 +51,14 @@ export default function Movies() {
 
     setData(films);
     setContainerWidth(350 * films.length + 48 * films.length);
-    setIsClosedToday(siteConfig.isClosed);
-    setIsWarnClosedOpen(siteConfig.isClosed);
   }, [siteConfig]);
+
+  // Abre o aviso quando o cinema passa a estar fechado (toggle manual ou uma
+  // programação entrando em vigor) — se o visitante fechar o aviso, ele não
+  // reabre sozinho enquanto continuar fechado.
+  useEffect(() => {
+    if (isClosedToday) setIsWarnClosedOpen(true);
+  }, [isClosedToday]);
 
   if (error)
     return (
@@ -114,7 +126,7 @@ export default function Movies() {
                 estará fechado
               </h2>
               <p className="text-[13px] text-stone-400 mt-0.5">
-                Volte em breve para conferir a programação.
+                {closureReason || "Volte em breve para conferir a programação."}
               </p>
             </div>
 
@@ -124,6 +136,28 @@ export default function Movies() {
             >
               Ver filmes em cartaz
             </Button>
+          </div>
+        </div>
+      )}
+
+      {upcoming && upcoming.id !== dismissedUpcomingId && (
+        <div className="w-full flex justify-center px-4 mb-4">
+          <div className="flex items-start gap-2 w-full sm:w-auto sm:max-w-xl px-3.5 py-2.5 rounded-xl bg-amber-50 border border-amber-200">
+            <BiCalendarX
+              className="flex-shrink-0 text-amber-600 mt-0.5"
+              size={15}
+            />
+            <p className="flex-1 min-w-0 text-xs sm:text-[13px] font-medium leading-snug text-amber-700">
+              Atenção: {formatScheduleWindow(upcoming)} não teremos sessão
+              {upcoming.reason ? ` — ${upcoming.reason}` : ""}.
+            </p>
+            <button
+              onClick={() => setDismissedUpcomingId(upcoming.id)}
+              aria-label="Fechar aviso"
+              className="flex-shrink-0 p-0.5 text-amber-500 hover:text-amber-700 cursor-pointer"
+            >
+              <FiX size={13} />
+            </button>
           </div>
         </div>
       )}
