@@ -1,7 +1,10 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { FaInstagram, FaFacebookF, FaWhatsapp } from "react-icons/fa";
 import { MdOutlineAlternateEmail } from "react-icons/md";
+import { useLogoEasterEgg } from "@/hooks/useLogoEasterEgg";
 
 const SOCIAL_LINKS = [
   {
@@ -30,18 +33,22 @@ const CONTACT_LINKS = [
 ];
 
 export default function Footer() {
+  const onLogoClick = useLogoEasterEgg();
+
   return (
     <footer id="contact" className="w-11/12 sm:w-10/12 max-w-[1200px] py-6">
       <hr className="mb-6 border-gray-200" />
 
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
         <div className="flex flex-col items-center sm:items-start gap-1.5">
-          <Image
-            src="/svg/logo.svg"
-            width={90}
-            height={45}
-            alt="Cine Drive-In"
-          />
+          <div onClick={onLogoClick} className="select-none">
+            <Image
+              src="/svg/logo.svg"
+              width={90}
+              height={45}
+              alt="Cine Drive-In"
+            />
+          </div>
           <span className="text-xs text-gray-400 text-center sm:text-start max-w-[180px] leading-relaxed">
             O único cinema drive-in da América Latina
           </span>
