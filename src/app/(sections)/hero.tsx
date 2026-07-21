@@ -86,7 +86,7 @@ export default function Hero() {
           DO DISTRITO FEDERAL
         </p>
         <span className="text-primary text-center lg:text-start text-lg font-semibold">
-          Projeto de Lei nº 6.055/2017
+          Lei Distrital nº 6.055/2017
         </span>
       </div>
       <div className="relative hero-enter-delayed">
@@ -115,7 +115,7 @@ export default function Hero() {
               </p>
             </div>
             <p className="text-white text-center text-sm font-semibold italic drop-shadow-sm">
-              Projeto de Lei nº 6.055/2017
+              Lei Distrital nº 6.055/2017
             </p>
           </div>
         </div>
