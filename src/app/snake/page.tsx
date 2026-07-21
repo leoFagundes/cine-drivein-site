@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { IoArrowBack } from "react-icons/io5";
+import { IoArrowBack, IoCreateOutline } from "react-icons/io5";
 import ClapperBoard from "./ClapperBoard";
 import SnakeGame from "./SnakeGame";
 import { useSiteSnakeLeaderboard } from "./useSiteSnakeLeaderboard";
@@ -16,6 +16,7 @@ export default function SnakePage() {
   const [playerId, setPlayerId] = useState<string | null>(null);
   const [playerName, setPlayerNameState] = useState<string | null>(null);
   const [nameInput, setNameInput] = useState("");
+  const [isEditingName, setIsEditingName] = useState(false);
   const [score, setScore] = useState(0);
 
   useEffect(() => {
@@ -23,10 +24,8 @@ export default function SnakePage() {
     setPlayerNameState(getSavedPlayerName());
   }, []);
 
-  const { highScore, leaderboard, rank, submitScore } = useSiteSnakeLeaderboard(
-    playerId,
-    playerName,
-  );
+  const { highScore, leaderboard, rank, submitScore, updateName } =
+    useSiteSnakeLeaderboard(playerId, playerName);
   const isInTopTen = leaderboard.some((e) => e.id === playerId);
 
   const handleGameOver = useCallback(
@@ -42,6 +41,13 @@ export default function SnakePage() {
     if (!trimmed) return;
     savePlayerName(trimmed);
     setPlayerNameState(trimmed);
+    void updateName(trimmed);
+    setIsEditingName(false);
+  }
+
+  function handleEditNameClick() {
+    setNameInput(playerName ?? "");
+    setIsEditingName(true);
   }
 
   return (
@@ -88,6 +94,53 @@ export default function SnakePage() {
           <SnakeGame onScoreChange={setScore} onGameOver={handleGameOver} />
 
           <div className="flex flex-col gap-5 w-full max-w-xs text-center sm:max-w-none sm:w-56 sm:text-left">
+            <div>
+              <p className="text-[10px] uppercase tracking-[0.3em] text-stone-400">
+                Jogando como
+              </p>
+              {isEditingName ? (
+                <form
+                  onSubmit={handleNameSubmit}
+                  className="flex items-center gap-1.5 mt-1 justify-center sm:justify-start"
+                >
+                  <input
+                    value={nameInput}
+                    onChange={(e) => setNameInput(e.target.value)}
+                    maxLength={24}
+                    autoFocus
+                    className="h-8 w-28 px-2 rounded-lg border border-stone-200 text-xs outline-none focus:border-primary"
+                  />
+                  <button
+                    type="submit"
+                    disabled={!nameInput.trim()}
+                    className="h-8 px-2 rounded-lg bg-stone-900 text-white text-xs font-semibold disabled:opacity-40"
+                  >
+                    Salvar
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setIsEditingName(false)}
+                    className="text-xs text-stone-400 hover:text-stone-600"
+                  >
+                    Cancelar
+                  </button>
+                </form>
+              ) : (
+                <div className="flex items-center gap-1.5 justify-center sm:justify-start">
+                  <p className="text-sm font-semibold text-stone-900 truncate max-w-[140px]">
+                    {playerName}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={handleEditNameClick}
+                    aria-label="Trocar nome"
+                    className="p-1 rounded-md text-stone-500 hover:text-stone-900 hover:bg-stone-100"
+                  >
+                    <IoCreateOutline size={15} />
+                  </button>
+                </div>
+              )}
+            </div>
             <div>
               <p className="text-[10px] uppercase tracking-[0.3em] text-stone-400">
                 Pontuação

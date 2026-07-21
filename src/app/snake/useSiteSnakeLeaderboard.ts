@@ -31,6 +31,7 @@ interface UseSiteSnakeLeaderboardResult {
   leaderboard: LeaderboardEntry[];
   rank: number | null;
   submitScore: (score: number) => Promise<boolean>;
+  updateName: (name: string) => Promise<void>;
 }
 
 /**
@@ -129,5 +130,17 @@ export function useSiteSnakeLeaderboard(
     [playerId, playerName, refreshLeaderboard, refreshRank],
   );
 
-  return { highScore, loaded, leaderboard, rank, submitScore };
+  /** Atualiza o nome no placar já publicado, sem esperar por um novo recorde. */
+  const updateName = useCallback(
+    async (name: string) => {
+      if (!playerId || highScoreRef.current <= 0) return;
+      try {
+        await setDoc(doc(db, COLLECTION, playerId), { name }, { merge: true });
+        refreshLeaderboard();
+      } catch {}
+    },
+    [playerId, refreshLeaderboard],
+  );
+
+  return { highScore, loaded, leaderboard, rank, submitScore, updateName };
 }

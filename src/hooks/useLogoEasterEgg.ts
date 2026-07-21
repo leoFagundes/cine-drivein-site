@@ -11,6 +11,7 @@ export function useLogoEasterEgg() {
   const router = useRouter();
   const countRef = useRef(0);
   const lastClickRef = useRef(0);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   return function onLogoClick(): boolean {
     const now = Date.now();
@@ -19,6 +20,13 @@ export function useLogoEasterEgg() {
     }
     lastClickRef.current = now;
     countRef.current += 1;
+
+    if (!audioRef.current) {
+      audioRef.current = new Audio("/music/easteregg.mp3");
+    }
+    audioRef.current.volume = 0.25;
+    audioRef.current.currentTime = 0;
+    audioRef.current.play().catch(() => {});
 
     if (countRef.current >= CLICKS_NEEDED) {
       countRef.current = 0;

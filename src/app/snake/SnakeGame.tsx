@@ -133,10 +133,14 @@ export default function SnakeGame({ onScoreChange, onGameOver }: SnakeGameProps)
     }
   }
 
-  /** Botão de direção (D-pad) ou swipe — também dá o start no primeiro toque. */
+  /** Botão de direção (D-pad), teclado ou swipe — também (re)inicia o jogo se ele não estiver rodando. */
   function handleDirectionInput(dir: Direction) {
+    if (statusRef.current === "idle") {
+      startGame();
+    } else if (statusRef.current === "over") {
+      restartGame();
+    }
     queueDirection(dir);
-    if (statusRef.current === "idle") startGame();
   }
 
   function handleTouchStart(e: React.TouchEvent<HTMLDivElement>) {
@@ -357,14 +361,14 @@ export default function SnakeGame({ onScoreChange, onGameOver }: SnakeGameProps)
       </div>
 
       {/* Cruzeta de toque — só em telas pequenas, teclado já cobre o desktop */}
-      <div className="grid grid-cols-3 gap-2 w-40 lg:hidden">
+      <div className="grid grid-cols-3 gap-3 w-60 lg:hidden">
         <div />
-        <DPadButton icon={<IoChevronUp size={18} />} onPress={() => handleDirectionInput("up")} />
+        <DPadButton icon={<IoChevronUp size={26} />} onPress={() => handleDirectionInput("up")} />
         <div />
-        <DPadButton icon={<IoChevronBack size={18} />} onPress={() => handleDirectionInput("left")} />
-        <DPadButton icon={<IoChevronDown size={18} />} onPress={() => handleDirectionInput("down")} />
+        <DPadButton icon={<IoChevronBack size={26} />} onPress={() => handleDirectionInput("left")} />
+        <DPadButton icon={<IoChevronDown size={26} />} onPress={() => handleDirectionInput("down")} />
         <DPadButton
-          icon={<IoChevronForward size={18} />}
+          icon={<IoChevronForward size={26} />}
           onPress={() => handleDirectionInput("right")}
         />
       </div>
@@ -387,7 +391,7 @@ function DPadButton({
         onPress();
       }}
       aria-label="Mover"
-      className="flex items-center justify-center h-11 rounded-xl bg-white border border-stone-200 text-stone-600 active:bg-stone-100"
+      className="flex items-center justify-center h-16 rounded-xl bg-white border border-stone-200 text-stone-600 active:bg-stone-100 active:scale-95 transition-transform duration-100 touch-manipulation"
     >
       {icon}
     </button>

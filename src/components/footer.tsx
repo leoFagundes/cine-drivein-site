@@ -1,7 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { FaInstagram, FaFacebookF, FaWhatsapp } from "react-icons/fa";
 import { MdOutlineAlternateEmail } from "react-icons/md";
 import { useLogoEasterEgg } from "@/hooks/useLogoEasterEgg";
@@ -34,6 +36,12 @@ const CONTACT_LINKS = [
 
 export default function Footer() {
   const onLogoClick = useLogoEasterEgg();
+  const [pulseKey, setPulseKey] = useState(0);
+
+  function handleLogoClick() {
+    onLogoClick();
+    setPulseKey((k) => k + 1);
+  }
 
   return (
     <footer id="contact" className="w-11/12 sm:w-10/12 max-w-[1200px] py-6">
@@ -41,14 +49,22 @@ export default function Footer() {
 
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
         <div className="flex flex-col items-center sm:items-start gap-1.5">
-          <div onClick={onLogoClick} className="select-none">
+          <motion.div
+            key={pulseKey}
+            onClick={handleLogoClick}
+            className="select-none cursor-pointer"
+            initial={{ scale: 1 }}
+            animate={{ scale: [1, 0.88, 1.06, 1] }}
+            transition={{ duration: 0.35, ease: "easeOut" }}
+            whileHover={{ scale: 1.05 }}
+          >
             <Image
               src="/svg/logo.svg"
               width={90}
               height={45}
               alt="Cine Drive-In"
             />
-          </div>
+          </motion.div>
           <span className="text-xs text-gray-400 text-center sm:text-start max-w-[180px] leading-relaxed">
             O único cinema drive-in da América Latina
           </span>
