@@ -5,6 +5,7 @@ import RevealOnScroll from "@/components/revealOnScroll";
 import FeedbackIllustration from "@/components/feedbackIllustration";
 import StarRating from "@/components/starRating";
 import Button from "@/components/button";
+import FeedbackList, { saveMyFeedbackId } from "@/components/feedbackList";
 import FeedbackRepositories from "@/services/repositories/FeedbackRepositories";
 import { FaPaperPlane, FaCheckCircle } from "react-icons/fa";
 import { IoWarning } from "react-icons/io5";
@@ -16,6 +17,7 @@ export default function FeedbackPage() {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(false);
+  const [listRefreshKey, setListRefreshKey] = useState(0);
 
   const canSubmit = rating > 0 && message.trim().length > 0;
 
@@ -26,7 +28,7 @@ export default function FeedbackPage() {
     setSubmitting(true);
     setError(false);
 
-    const success = await FeedbackRepositories.createFeedback({
+    const id = await FeedbackRepositories.createFeedback({
       name: name.trim() || "Anônimo",
       rating,
       message: message.trim(),
@@ -34,11 +36,13 @@ export default function FeedbackPage() {
 
     setSubmitting(false);
 
-    if (success) {
+    if (id) {
+      saveMyFeedbackId(id);
       setSubmitted(true);
       setName("");
       setMessage("");
       setRating(0);
+      setListRefreshKey((k) => k + 1);
     } else {
       setError(true);
     }
@@ -70,8 +74,9 @@ export default function FeedbackPage() {
             <FaCheckCircle className="text-primary" size={"40px"} />
             <h2 className="font-semibold text-xl">Obrigado pelo carinho!</h2>
             <p className="font-medium text-sm max-w-[400px]">
-              Sua mensagem foi enviada com sucesso. Agradecemos por dividir
-              sua experiência com a gente.
+              Sua avaliação foi enviada com sucesso. Ela passa por uma breve
+              análise da nossa equipe antes de ficar visível aqui — assim que
+              for aprovada, ela aparece na lista abaixo pra todo mundo ver.
             </p>
             <button
               onClick={() => setSubmitted(false)}
@@ -147,6 +152,13 @@ export default function FeedbackPage() {
             </Button>
           </form>
         )}
+      </RevealOnScroll>
+
+      <RevealOnScroll delay={150} className="w-full flex flex-col gap-3">
+        <h2 className="text-center font-semibold text-lg">
+          O que estão dizendo
+        </h2>
+        <FeedbackList refreshKey={listRefreshKey} />
       </RevealOnScroll>
     </section>
   );

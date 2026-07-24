@@ -81,3 +81,13 @@ export interface Feedback {
   rating: number;
   message: string;
 }
+
+export type FeedbackStatus = "pending" | "approved" | "hidden";
+
+export interface FeedbackEntry extends Feedback {
+  id: string;
+  status: FeedbackStatus;
+  reply?: string;
+  repliedAt?: Date;
+  createdAt: Date;
+}
