@@ -7,6 +7,7 @@ import StarRating from "@/components/starRating";
 import Button from "@/components/button";
 import FeedbackList, { saveMyFeedbackId } from "@/components/feedbackList";
 import FeedbackRepositories from "@/services/repositories/FeedbackRepositories";
+import { useSiteConfig } from "@/hooks/useSiteConfig";
 import { FaPaperPlane, FaCheckCircle } from "react-icons/fa";
 import { IoWarning } from "react-icons/io5";
 
@@ -18,6 +19,7 @@ export default function FeedbackPage() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(false);
   const [listRefreshKey, setListRefreshKey] = useState(0);
+  const { data: siteConfig } = useSiteConfig();
 
   const canSubmit = rating > 0 && message.trim().length > 0;
 
@@ -154,12 +156,14 @@ export default function FeedbackPage() {
         )}
       </RevealOnScroll>
 
-      <RevealOnScroll delay={150} className="w-full flex flex-col gap-3">
-        <h2 className="text-center font-semibold text-lg">
-          O que estão dizendo
-        </h2>
-        <FeedbackList refreshKey={listRefreshKey} />
-      </RevealOnScroll>
+      {!siteConfig?.hideFeedbackSection && (
+        <RevealOnScroll delay={150} className="w-full flex flex-col gap-3">
+          <h2 className="text-center font-semibold text-lg">
+            O que estão dizendo
+          </h2>
+          <FeedbackList refreshKey={listRefreshKey} />
+        </RevealOnScroll>
+      )}
     </section>
   );
 }

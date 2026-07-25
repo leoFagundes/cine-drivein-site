@@ -67,6 +67,10 @@ export interface SiteConfig {
   session4?: Film | null;
   prices?: PriceRule[];
   closureSchedules?: ClosureSchedule[];
+  /** Oculta a seção pública de comentários (lista de avaliações) no site. */
+  hideFeedbackSection?: boolean;
+  /** Oculta o link "Avaliação" na navbar do site. */
+  hideFeedbackNavLink?: boolean;
 }
 
 export type Schedule = {

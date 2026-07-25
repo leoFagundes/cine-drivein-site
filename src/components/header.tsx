@@ -17,6 +17,7 @@ import {
 } from "react-icons/io5";
 import { usePathname } from "next/navigation";
 import { trackEvent, PageClickKey } from "@/lib/analytics";
+import { useSiteConfig } from "@/hooks/useSiteConfig";
 
 const overlayVariants: Variants = {
   hidden: { opacity: 0 },
@@ -58,6 +59,7 @@ export default function Header() {
   const [hasMoreScroll, setHasMoreScroll] = useState(false);
   const listRef = useRef<HTMLUListElement>(null);
   const pathname = usePathname();
+  const { data: siteConfig } = useSiteConfig();
 
   function checkScroll() {
     const el = listRef.current;
@@ -118,7 +120,9 @@ export default function Header() {
       link: "/feedback",
       icon: <IoStarOutline size={"20px"} />,
     },
-  ];
+  ].filter((item) =>
+    item.key === "feedback" ? !siteConfig?.hideFeedbackNavLink : true,
+  );
 
   return (
     <>

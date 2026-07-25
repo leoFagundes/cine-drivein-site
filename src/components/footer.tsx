@@ -56,7 +56,6 @@ export default function Footer() {
             initial={{ scale: 1 }}
             animate={{ scale: [1, 0.88, 1.06, 1] }}
             transition={{ duration: 0.35, ease: "easeOut" }}
-            whileHover={{ scale: 1.05 }}
           >
             <Image
               src="/svg/logo.svg"
