@@ -144,8 +144,12 @@ interface View {
   bg: HTMLCanvasElement | null;
   head: HTMLCanvasElement | null;
   food: HTMLCanvasElement | null;
+  segment: HTMLCanvasElement | null;
   font: string;
 }
+
+/** Os últimos blocos da cauda afinam um pouco (do último para o antepenúltimo). */
+const TAIL_TAPER = [0.78, 0.86, 0.94];
 
 function createEngine(): Engine {
   const state = createInitialState(GRID);
@@ -238,38 +242,66 @@ function makeSprite(
   return canvas;
 }
 
-/**
- * Pontos do corpo no quadro atual: só a cabeça e a ponta da cauda deslizam;
- * o resto fica nos centros das células — por isso as curvas saem perfeitas.
- */
-function bodyPoints(g: Engine, cell: number, t: number): Point[] {
-  const cur = g.state.snake;
-  const prev = g.prevSnake;
+function resizePoints(g: Engine, count: number): Point[] {
   const out = g.points;
-  const count = cur.length + 1;
   while (out.length < count) out.push({ x: 0, y: 0 });
   out.length = count;
+  return out;
+}
 
-  const headX = (cur[0].x + 0.5) * cell;
-  const headY = (cur[0].y + 0.5) * cell;
+/** Cabeça no quadro atual (na virada atrasada, ela "corta" a curva). */
+function setHeadPoint(g: Engine, cell: number, t: number, out: Point) {
+  const to = g.state.snake[0];
+  const x = (to.x + 0.5) * cell;
+  const y = (to.y + 0.5) * cell;
   if (g.headFrom) {
-    // Virada atrasada: a cabeça "corta" a curva de onde estava até a nova célula.
     const u = clamp01((t - g.headFromP) / (1 - g.headFromP));
-    out[0].x = lerp((g.headFrom.x + 0.5) * cell, headX, u);
-    out[0].y = lerp((g.headFrom.y + 0.5) * cell, headY, u);
+    out.x = lerp((g.headFrom.x + 0.5) * cell, x, u);
+    out.y = lerp((g.headFrom.y + 0.5) * cell, y, u);
   } else {
-    const from = prev[0] ?? cur[0];
-    out[0].x = lerp((from.x + 0.5) * cell, headX, t);
-    out[0].y = lerp((from.y + 0.5) * cell, headY, t);
+    const from = g.prevSnake[0] ?? to;
+    out.x = lerp((from.x + 0.5) * cell, x, t);
+    out.y = lerp((from.y + 0.5) * cell, y, t);
   }
+}
+
+/**
+ * Corpo contínuo: só a cabeça e a ponta da cauda deslizam; o resto fica nos
+ * centros das células — por isso as curvas saem perfeitas.
+ */
+function pathPoints(g: Engine, cell: number, t: number): Point[] {
+  const cur = g.state.snake;
+  const prev = g.prevSnake;
+  const out = resizePoints(g, cur.length + 1);
+  setHeadPoint(g, cell, t, out[0]);
   for (let i = 1; i < cur.length; i++) {
     out[i].x = (cur[i].x + 0.5) * cell;
     out[i].y = (cur[i].y + 0.5) * cell;
   }
+  const last = out.length - 1;
   const tailFrom = prev[prev.length - 1] ?? cur[cur.length - 1];
   const tailTo = cur[cur.length - 1];
-  out[count - 1].x = lerp((tailFrom.x + 0.5) * cell, (tailTo.x + 0.5) * cell, t);
-  out[count - 1].y = lerp((tailFrom.y + 0.5) * cell, (tailTo.y + 0.5) * cell, t);
+  out[last].x = lerp((tailFrom.x + 0.5) * cell, (tailTo.x + 0.5) * cell, t);
+  out[last].y = lerp((tailFrom.y + 0.5) * cell, (tailTo.y + 0.5) * cell, t);
+  return out;
+}
+
+/**
+ * Corpo em blocos: cada bloco desliza da sua célula anterior para a atual,
+ * todos no mesmo ritmo — como vagões puxados pela cabeça. Ao crescer, o bloco
+ * novo nasce embaixo do último e aparece conforme a fila anda.
+ */
+function segmentPoints(g: Engine, cell: number, t: number): Point[] {
+  const cur = g.state.snake;
+  const prev = g.prevSnake;
+  const out = resizePoints(g, cur.length);
+  setHeadPoint(g, cell, t, out[0]);
+  for (let i = 1; i < cur.length; i++) {
+    const to = cur[i];
+    const from = prev[i] ?? to;
+    out[i].x = lerp((from.x + 0.5) * cell, (to.x + 0.5) * cell, t);
+    out[i].y = lerp((from.y + 0.5) * cell, (to.y + 0.5) * cell, t);
+  }
   return out;
 }
 
@@ -301,6 +333,7 @@ export default function SnakeGame({
     bg: null,
     head: null,
     food: null,
+    segment: null,
     font: "sans-serif",
   });
   const themeRef = useRef(theme);
@@ -632,8 +665,20 @@ export default function SnakeGame({
       );
     }
 
-    const points = bodyPoints(g, cell, progress);
+    const segmentSprite = r.bodyStyle === "segments" ? v.segment : null;
+    const points = segmentSprite
+      ? segmentPoints(g, cell, progress)
+      : pathPoints(g, cell, progress);
     r.drawBody(ctx, points, cell, now);
+    if (segmentSprite) {
+      // Da cauda para a cabeça: os blocos da frente ficam por cima.
+      const base = (r.segmentSize ?? 1) * cell;
+      for (let i = points.length - 1; i >= 1; i--) {
+        const fromTail = points.length - 1 - i;
+        const size = base * (TAIL_TAPER[fromTail] ?? 1);
+        ctx.drawImage(segmentSprite, points[i].x - size / 2, points[i].y - size / 2, size, size);
+      }
+    }
 
     // Cabeça: gira na curva e já "olha" para a próxima virada pedida.
     const turn = easeOutCubic(clamp01((progress - g.turnStartP) / TURN_PORTION));
@@ -795,6 +840,9 @@ export default function SnakeGame({
       v.bg = bg;
       v.head = makeSprite(r.headSize.w, r.headSize.h, v.cell, dpr, r.drawHead);
       v.food = makeSprite(r.foodSize, r.foodSize, v.cell, dpr, r.drawFood);
+      v.segment = r.drawSegment
+        ? makeSprite(r.segmentSize ?? 1, r.segmentSize ?? 1, v.cell, dpr, r.drawSegment)
+        : null;
       setBoardSize(size);
     };
 

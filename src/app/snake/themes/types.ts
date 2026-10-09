@@ -19,8 +19,21 @@ export interface SnakeRenderer {
   drawFood(ctx: CanvasRenderingContext2D): void;
   /** Lado do sprite da comida, em células. */
   foodSize: number;
-  /** Corpo inteiro, da cabeça à cauda (pontos em px). */
+  /**
+   * Como o corpo é desenhado:
+   * - "path" (padrão): traço contínuo — `drawBody` recebe o caminho (cabeça,
+   *   centros das células e a ponta da cauda).
+   * - "segments": blocos que deslizam célula a célula — `drawBody` recebe o
+   *   centro de cada bloco (índice 0 = cabeça) e desenha só o que fica por
+   *   baixo deles; cada bloco é o sprite de `drawSegment`.
+   */
+  bodyStyle?: "path" | "segments";
+  /** Corpo (estilo "path") ou o que fica sob os blocos (estilo "segments"). Pontos em px. */
   drawBody(ctx: CanvasRenderingContext2D, points: Point[], cell: number, time: number): void;
+  /** Um bloco do corpo centrado em (0,0). 1 unidade = 1 célula. */
+  drawSegment?(ctx: CanvasRenderingContext2D): void;
+  /** Lado do sprite do bloco, em células. */
+  segmentSize?: number;
   /** Extras por cima da cabeça a cada quadro (texto sempre em pé, animações). */
   drawHeadOverlay?(
     ctx: CanvasRenderingContext2D,

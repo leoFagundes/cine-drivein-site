@@ -228,6 +228,7 @@ function drawHeadOverlay(
   ctx.restore();
 }
 
+/** Engate escuro ligando os blocos (fica por baixo deles; aparece nos vãos e nas curvas). */
 function drawBody(ctx: CanvasRenderingContext2D, points: Point[], cell: number) {
   if (points.length < 2) return;
   const path = new Path2D();
@@ -236,30 +237,47 @@ function drawBody(ctx: CanvasRenderingContext2D, points: Point[], cell: number) 
 
   ctx.lineCap = "round";
   ctx.lineJoin = "round";
-
-  ctx.save();
-  ctx.translate(cell * 0.06, cell * 0.1);
   ctx.strokeStyle = "rgba(0,0,0,0.35)";
-  ctx.lineWidth = cell * 0.68;
+  ctx.lineWidth = cell * 0.22;
   ctx.stroke(path);
-  ctx.restore();
-
-  // Rastro mais estreito e mais escuro que o carro, para a cabeça se destacar.
-  ctx.strokeStyle = "#7d0c14";
-  ctx.lineWidth = cell * 0.62;
-  ctx.stroke(path);
-  ctx.strokeStyle = "#c81a25";
-  ctx.lineWidth = cell * 0.48;
-  ctx.stroke(path);
-
-  // Faixa amarela tracejada: nasce na cabeça, então corre junto com o carro.
-  ctx.setLineDash([cell * 0.34, cell * 0.3]);
-  ctx.lineDashOffset = -cell * 0.9;
-  ctx.strokeStyle = "#ffc21a";
+  ctx.strokeStyle = "#4a0d13";
   ctx.lineWidth = cell * 0.13;
   ctx.stroke(path);
-  ctx.setLineDash([]);
-  ctx.lineDashOffset = 0;
+}
+
+/** Um bloco do comboio: vermelho com volume, sombra no asfalto e o raio do McQueen. */
+function drawSegment(ctx: CanvasRenderingContext2D) {
+  const half = 0.39;
+  const radius = 0.2;
+
+  ctx.fillStyle = "rgba(0,0,0,0.38)";
+  roundRect(ctx, -half + 0.05, -half + 0.08, half * 2, half * 2, radius);
+  ctx.fill();
+
+  const paint = ctx.createLinearGradient(0, -half, 0, half);
+  paint.addColorStop(0, "#ff5a60");
+  paint.addColorStop(0.45, "#e3222c");
+  paint.addColorStop(1, "#a3101a");
+  ctx.fillStyle = paint;
+  roundRect(ctx, -half, -half, half * 2, half * 2, radius);
+  ctx.fill();
+  ctx.strokeStyle = "#6e0a12";
+  ctx.lineWidth = 0.04;
+  ctx.stroke();
+
+  ctx.fillStyle = "rgba(255,255,255,0.3)";
+  roundRect(ctx, -half + 0.09, -half + 0.06, half * 2 - 0.18, 0.11, 0.055);
+  ctx.fill();
+
+  const bolt = new Path2D(
+    "M0.06 -0.24L-0.12 0.02L0.01 0.02L-0.06 0.24L0.14 -0.05L0.01 -0.05L0.08 -0.24Z",
+  );
+  ctx.fillStyle = "#ffc21a";
+  ctx.fill(bolt);
+  ctx.strokeStyle = "#a35d00";
+  ctx.lineWidth = 0.025;
+  ctx.lineJoin = "round";
+  ctx.stroke(bolt);
 }
 
 /** Troféu dourado, desenhado numa caixa de 40 unidades. */
@@ -324,7 +342,10 @@ const renderer: SnakeRenderer = {
   headSize: { w: 1.95, h: 1.35 },
   drawFood,
   foodSize: 1.6,
+  bodyStyle: "segments",
   drawBody,
+  drawSegment,
+  segmentSize: 1,
   drawHeadOverlay,
   particleColors: ["#ffd34d", "#fff3b0", "#ff9f1c", "#e11d2e"],
   crashColors: ["#e3222c", "#ffc21a", "#9ca3af", "#d1d5db"],
