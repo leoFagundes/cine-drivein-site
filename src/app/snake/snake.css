@@ -286,6 +286,23 @@
   background: rgb(255 255 255 / 0.1);
 }
 
+/* Som + pausa empilhados (cabe no HUD do celular) */
+.sk-hud__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sk-hud__actions .sk-icon-btn {
+  width: 40px;
+  height: 34px;
+  border-radius: 12px;
+}
+
+.sk-hud__actions .sk-icon-btn:only-child {
+  height: 42px;
+}
+
 .sk-icon-btn:active {
   transform: scale(0.94);
 }

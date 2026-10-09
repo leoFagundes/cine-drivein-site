@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { flushSync } from "react-dom";
 import {
   IoChevronBack,
   IoChevronDown,
@@ -9,6 +10,8 @@ import {
   IoPause,
   IoPlay,
   IoRefresh,
+  IoVolumeHigh,
+  IoVolumeMute,
 } from "react-icons/io5";
 import {
   MAX_KMH,
@@ -23,6 +26,7 @@ import {
   type GameState,
   type Point,
 } from "./gameLogic";
+import { GameAudio } from "./gameAudio";
 import Speedometer from "./Speedometer";
 import type { SnakeTheme } from "./themes/types";
 
@@ -38,6 +42,16 @@ const RESTART_COOLDOWN_MS = 650;
 const EAT_REVEAL = 0.78;
 /** Fração do passo usada para girar a cabeça numa curva. */
 const TURN_PORTION = 0.45;
+/**
+ * Virada "atrasada": apertou logo depois de passar do centro da célula?
+ * Até esta fração do passo a curva ainda vale para a célula que acabou de passar.
+ */
+const LATE_TURN_WINDOW = 0.3;
+/** Antes de bater, segura a cobra um instante: uma virada de última hora ainda salva. */
+const CRASH_GRACE_MAX_MS = 90;
+/** Ao apertar, a cabeça já "olha" para a curva (fração de 90°) — resposta imediata. */
+const LEAN = 0.25;
+const LEAN_MS = 90;
 const SHAKE_MS = 420;
 
 type Status = "idle" | "countdown" | "playing" | "paused" | "over";
@@ -83,14 +97,28 @@ interface Popup {
 
 interface Engine {
   state: GameState;
+  /** Estado antes do passo atual (para a virada atrasada). */
+  prevState: GameState | null;
   prevSnake: Point[];
   queue: Direction[];
+  queuedAt: number;
   status: Status;
   lastTick: number;
   tickMs: number;
   level: number;
+  /** A direção do passo atual veio de um comando do jogador. */
+  stepExplicit: boolean;
   angleFrom: number;
   angleTo: number;
+  turnStartP: number;
+  displayAngle: number;
+  /** Virada atrasada: de onde a cabeça sai (em células) e em que ponto do passo. */
+  headFrom: Point | null;
+  headFromP: number;
+  /** Ia bater: segura um instante esperando uma virada salvadora. */
+  holding: boolean;
+  holdAt: number;
+  holdDir: Direction;
   /** Comida que a cabeça está indo pegar (efeitos quando chegar lá). */
   eating: Point | null;
   foodShownAt: number;
@@ -104,6 +132,8 @@ interface Engine {
   shakeUntil: number;
   particles: Particle[];
   popups: Popup[];
+  /** Pontos do corpo reaproveitados a cada quadro (nada de lixo para o GC). */
+  points: Point[];
 }
 
 interface View {
@@ -121,14 +151,24 @@ function createEngine(): Engine {
   const state = createInitialState(GRID);
   return {
     state,
+    prevState: null,
     prevSnake: state.snake,
     queue: [],
+    queuedAt: 0,
     status: "idle",
     lastTick: 0,
     tickMs: tickMsForLevel(0),
     level: 0,
+    stepExplicit: false,
     angleFrom: 0,
     angleTo: 0,
+    turnStartP: 0,
+    displayAngle: 0,
+    headFrom: null,
+    headFromP: 0,
+    holding: false,
+    holdAt: 0,
+    holdDir: "right",
     eating: null,
     foodShownAt: 0,
     playedMs: 0,
@@ -141,6 +181,7 @@ function createEngine(): Engine {
     shakeUntil: 0,
     particles: [],
     popups: [],
+    points: [],
   };
 }
 
@@ -162,6 +203,7 @@ function isActivatable(target: EventTarget | null): boolean {
 }
 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+const clamp01 = (t: number) => (t < 0 ? 0 : t > 1 ? 1 : t);
 const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
 
 function easeOutBack(t: number) {
@@ -170,11 +212,11 @@ function easeOutBack(t: number) {
   return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
 }
 
-function lerpAngle(a: number, b: number, t: number) {
+function angleDiff(a: number, b: number) {
   let d = b - a;
   while (d > Math.PI) d -= Math.PI * 2;
   while (d < -Math.PI) d += Math.PI * 2;
-  return a + d * t;
+  return d;
 }
 
 /** Sprite em cache: o desenho usa 1 unidade = 1 célula, origem no centro. */
@@ -203,18 +245,32 @@ function makeSprite(
 function bodyPoints(g: Engine, cell: number, t: number): Point[] {
   const cur = g.state.snake;
   const prev = g.prevSnake;
-  const center = (p: Point) => ({ x: (p.x + 0.5) * cell, y: (p.y + 0.5) * cell });
+  const out = g.points;
+  const count = cur.length + 1;
+  while (out.length < count) out.push({ x: 0, y: 0 });
+  out.length = count;
 
-  const headFrom = center(prev[0] ?? cur[0]);
-  const headTo = center(cur[0]);
-  const points: Point[] = [
-    { x: lerp(headFrom.x, headTo.x, t), y: lerp(headFrom.y, headTo.y, t) },
-  ];
-  for (let i = 1; i < cur.length; i++) points.push(center(cur[i]));
-  const tailFrom = center(prev[prev.length - 1] ?? cur[cur.length - 1]);
-  const tailTo = center(cur[cur.length - 1]);
-  points.push({ x: lerp(tailFrom.x, tailTo.x, t), y: lerp(tailFrom.y, tailTo.y, t) });
-  return points;
+  const headX = (cur[0].x + 0.5) * cell;
+  const headY = (cur[0].y + 0.5) * cell;
+  if (g.headFrom) {
+    // Virada atrasada: a cabeça "corta" a curva de onde estava até a nova célula.
+    const u = clamp01((t - g.headFromP) / (1 - g.headFromP));
+    out[0].x = lerp((g.headFrom.x + 0.5) * cell, headX, u);
+    out[0].y = lerp((g.headFrom.y + 0.5) * cell, headY, u);
+  } else {
+    const from = prev[0] ?? cur[0];
+    out[0].x = lerp((from.x + 0.5) * cell, headX, t);
+    out[0].y = lerp((from.y + 0.5) * cell, headY, t);
+  }
+  for (let i = 1; i < cur.length; i++) {
+    out[i].x = (cur[i].x + 0.5) * cell;
+    out[i].y = (cur[i].y + 0.5) * cell;
+  }
+  const tailFrom = prev[prev.length - 1] ?? cur[cur.length - 1];
+  const tailTo = cur[cur.length - 1];
+  out[count - 1].x = lerp((tailFrom.x + 0.5) * cell, (tailTo.x + 0.5) * cell, t);
+  out[count - 1].y = lerp((tailFrom.y + 0.5) * cell, (tailTo.y + 0.5) * cell, t);
+  return out;
 }
 
 interface SnakeGameProps {
@@ -248,6 +304,7 @@ export default function SnakeGame({
     font: "sans-serif",
   });
   const themeRef = useRef(theme);
+  const audioRef = useRef<GameAudio | null>(null);
   const recordRef = useRef(record);
   const suspendedRef = useRef(suspended);
   const onGameOverRef = useRef(onGameOver);
@@ -261,6 +318,7 @@ export default function SnakeGame({
   const [finalScore, setFinalScore] = useState(0);
   const [newRecord, setNewRecord] = useState(false);
   const [boardSize, setBoardSize] = useState(0);
+  const [muted, setMuted] = useState(false);
 
   useEffect(() => {
     recordRef.current = record;
@@ -295,8 +353,8 @@ export default function SnakeGame({
 
   function newGame() {
     const g = engineRef.current;
-    const lastFrame = g.lastFrame;
-    Object.assign(g, createEngine(), { lastFrame });
+    const { lastFrame, points } = g;
+    Object.assign(g, createEngine(), { lastFrame, points });
     setScore(0);
     setLevel(0);
     startCountdown();
@@ -315,6 +373,7 @@ export default function SnakeGame({
     }
     g.resuming = false;
     g.queue = [];
+    audioRef.current?.stopMusic();
     setStatus("paused");
   }
 
@@ -351,6 +410,7 @@ export default function SnakeGame({
     const last = queue.length > 0 ? queue[queue.length - 1] : g.state.direction;
     if (dir === last || isOpposite(last, dir)) return;
     if (queue.length >= MAX_QUEUED_DIRECTIONS) return;
+    if (queue.length === 0) g.queuedAt = performance.now();
     queue.push(dir);
   }
 
@@ -364,7 +424,88 @@ export default function SnakeGame({
       if (!fresh || performance.now() - g.overAt < RESTART_COOLDOWN_MS) return;
       newGame();
     }
+    const now = performance.now();
+    if (lateTurn(dir, now)) return;
     queueDirection(dir);
+    // Prestes a bater e veio uma virada: resolve agora, sem esperar o próximo quadro.
+    if (g.holding) resolveHold(now);
+  }
+
+  /* ───────────── Passos do jogo ───────────── */
+
+  function applyStep(prev: GameState, next: GameState, explicit: boolean, ease = true) {
+    const g = engineRef.current;
+    g.angleFrom = g.displayAngle;
+    g.angleTo = ANGLE[next.direction];
+    g.turnStartP = 0;
+    g.headFrom = null;
+    g.prevState = prev;
+    g.prevSnake = prev.snake;
+    g.state = next;
+    g.stepExplicit = explicit;
+    g.eating = next.score > prev.score ? prev.food : null;
+    // Acelera aos poucos: cada passo cobre 35% da diferença até o novo nível.
+    if (ease) g.tickMs += (tickMsForLevel(levelForScore(next.score)) - g.tickMs) * 0.35;
+  }
+
+  function tick(now: number) {
+    const g = engineRef.current;
+    if (g.eating) revealEat(now);
+    const prev = g.state;
+    const queued = g.queue.shift();
+    const dir = queued ?? prev.direction;
+    const next = step(prev, dir);
+    if (next.gameOver) {
+      g.holding = true;
+      g.holdAt = now;
+      g.holdDir = dir;
+      return;
+    }
+    applyStep(prev, next, queued !== undefined);
+  }
+
+  /** Durante a tolerância da batida: uma virada válida salva; senão, bate. */
+  function resolveHold(now: number) {
+    const g = engineRef.current;
+    while (g.queue.length > 0) {
+      const dir = g.queue.shift() as Direction;
+      const rescue = step(g.state, dir);
+      if (!rescue.gameOver) {
+        g.holding = false;
+        g.lastTick = now;
+        applyStep(g.state, rescue, true);
+        return;
+      }
+    }
+    if (now - g.holdAt >= Math.min(CRASH_GRACE_MAX_MS, g.tickMs * 0.55)) {
+      g.holding = false;
+      g.state = step(g.state, g.holdDir);
+      endGame(now);
+    }
+  }
+
+  /**
+   * Apertou um pouco depois de a cabeça passar do centro da célula? Refaz o
+   * passo atual já virando — em vez de andar mais uma casa antes da curva.
+   */
+  function lateTurn(dir: Direction, now: number): boolean {
+    const g = engineRef.current;
+    const base = g.prevState;
+    if (g.status !== "playing" || g.holding || !base) return false;
+    if (g.queue.length > 0 || g.stepExplicit) return false;
+    const p = (now - g.lastTick) / g.tickMs;
+    if (p < 0 || p > LATE_TURN_WINDOW) return false;
+    if (dir === g.state.direction || isOpposite(base.direction, dir)) return false;
+    const alt = step(base, dir);
+    if (alt.gameOver) return false;
+
+    const from = base.snake[0];
+    const to = g.state.snake[0];
+    applyStep(base, alt, true, false);
+    g.headFrom = { x: lerp(from.x, to.x, p), y: lerp(from.y, to.y, p) };
+    g.headFromP = p;
+    g.turnStartP = p;
+    return true;
   }
 
   /* ───────────── Efeitos ───────────── */
@@ -393,13 +534,14 @@ export default function SnakeGame({
     engineRef.current.popups.push({ x, y, text, color, size, life, max: life });
   }
 
-  /** A cabeça chegou na comida: pontua, solta os efeitos e mostra a próxima. */
+  /** A cabeça chegou na comida: som, pontos, efeitos e a próxima comida. */
   function revealEat(now: number) {
     const g = engineRef.current;
     const food = g.eating;
     if (!food) return;
     g.eating = null;
     g.foodShownAt = now;
+    audioRef.current?.play("eat");
     const { cell } = viewRef.current;
     const x = (food.x + 0.5) * cell;
     const y = (food.y + 0.5) * cell;
@@ -427,6 +569,8 @@ export default function SnakeGame({
   function endGame(now: number) {
     const g = engineRef.current;
     if (g.eating) revealEat(now);
+    audioRef.current?.stopMusic();
+    audioRef.current?.play("crash");
     g.overAt = now;
     g.shakeUntil = reduceMotionRef.current ? 0 : now + SHAKE_MS;
     const { cell } = viewRef.current;
@@ -449,25 +593,6 @@ export default function SnakeGame({
       // sem vibração (iOS/desktop)
     }
     onGameOverRef.current(total, Math.round(g.playedMs));
-  }
-
-  function tick(now: number) {
-    const g = engineRef.current;
-    if (g.eating) revealEat(now);
-    const prev = g.state;
-    const next = step(prev, g.queue.shift() ?? prev.direction);
-    if (next.gameOver) {
-      g.state = next;
-      endGame(now);
-      return;
-    }
-    g.angleFrom = ANGLE[prev.direction];
-    g.angleTo = ANGLE[next.direction];
-    g.prevSnake = prev.snake;
-    g.state = next;
-    if (next.score > prev.score) g.eating = prev.food;
-    // Acelera aos poucos: cada passo cobre 35% da diferença até o novo nível.
-    g.tickMs += (tickMsForLevel(levelForScore(next.score)) - g.tickMs) * 0.35;
   }
 
   /* ───────────── Desenho ───────────── */
@@ -510,8 +635,16 @@ export default function SnakeGame({
     const points = bodyPoints(g, cell, progress);
     r.drawBody(ctx, points, cell, now);
 
-    const turn = easeOutCubic(Math.min(progress / TURN_PORTION, 1));
-    const angle = lerpAngle(g.angleFrom, g.angleTo, turn);
+    // Cabeça: gira na curva e já "olha" para a próxima virada pedida.
+    const turn = easeOutCubic(clamp01((progress - g.turnStartP) / TURN_PORTION));
+    let angle = g.angleFrom + angleDiff(g.angleFrom, g.angleTo) * turn;
+    const upcoming = g.status === "playing" && !g.holding ? g.queue[0] : undefined;
+    if (upcoming) {
+      const diff = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, angleDiff(angle, ANGLE[upcoming])));
+      angle += diff * LEAN * easeOutCubic(clamp01((now - g.queuedAt) / LEAN_MS));
+    }
+    g.displayAngle = angle;
+
     const hw = r.headSize.w * cell;
     const hh = r.headSize.h * cell;
     ctx.save();
@@ -525,7 +658,7 @@ export default function SnakeGame({
     if (g.particles.length > 0) {
       const gravity = r.particleGravity * cell;
       const drag = Math.pow(0.985, dt / 16);
-      const alive: Particle[] = [];
+      let alive = 0;
       for (const p of g.particles) {
         p.life -= dt;
         if (p.life <= 0) continue;
@@ -538,18 +671,18 @@ export default function SnakeGame({
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         ctx.fill();
-        alive.push(p);
+        g.particles[alive++] = p;
       }
       ctx.globalAlpha = 1;
-      g.particles = alive;
+      g.particles.length = alive;
     }
 
-    // Textos que sobem (+1, +4 km/h, "Ação!")
+    // Textos que sobem (+1, +4 km/h, "Ka-chow!")
     if (g.popups.length > 0) {
-      const alive: Popup[] = [];
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.lineJoin = "round";
+      let alive = 0;
       for (const p of g.popups) {
         p.life -= dt;
         if (p.life <= 0) continue;
@@ -563,10 +696,10 @@ export default function SnakeGame({
         ctx.strokeText(p.text, p.x, y);
         ctx.fillStyle = p.color;
         ctx.fillText(p.text, p.x, y);
-        alive.push(p);
+        g.popups[alive++] = p;
       }
       ctx.globalAlpha = 1;
-      g.popups = alive;
+      g.popups.length = alive;
     }
   }
 
@@ -584,13 +717,19 @@ export default function SnakeGame({
         const beat = Math.floor((now - g.countdownAt) / COUNTDOWN_BEAT_MS);
         if (beat !== g.countdownBeat) {
           g.countdownBeat = beat;
-          if (beat < 3) setCountdown(3 - beat);
+          if (beat < 3) {
+            // A luz do semáforo acende no mesmo quadro em que o bipe sai.
+            flushSync(() => setCountdown(3 - beat));
+            audioRef.current?.play("countdown");
+          }
         }
         if (beat >= 3) {
           const resumed = g.resuming;
           g.lastTick = resumed ? now - g.pausedProgress * g.tickMs : now;
           g.resuming = false;
+          if (g.holding) g.holdAt = now;
           setStatus("playing");
+          audioRef.current?.startMusic();
           if (!resumed) {
             const { size, cell } = viewRef.current;
             popup(size / 2, size / 2, themeRef.current.copy.goText, "#ffffff", cell * 1.4, 650);
@@ -601,12 +740,16 @@ export default function SnakeGame({
       let progress = 1;
       if (g.status === "playing") {
         g.playedMs += dt;
-        if (now - g.lastTick >= g.tickMs) {
+        if (g.holding) {
+          resolveHold(now);
+        } else if (now - g.lastTick >= g.tickMs) {
           // Cadência estável: avança pelo tempo do passo, não pelo quadro.
           g.lastTick = now - g.lastTick > g.tickMs * 2 ? now : g.lastTick + g.tickMs;
           tick(now);
         }
-        if (g.status === "playing") progress = Math.min((now - g.lastTick) / g.tickMs, 1);
+        if (g.status === "playing" && !g.holding) {
+          progress = Math.min((now - g.lastTick) / g.tickMs, 1);
+        }
       } else if (g.status === "paused" || (g.status === "countdown" && g.resuming)) {
         progress = g.pausedProgress;
       }
@@ -660,6 +803,32 @@ export default function SnakeGame({
     observer.observe(board);
     return () => observer.disconnect();
   }, [theme]);
+
+  /* ───────────── Áudio do tema ───────────── */
+
+  useEffect(() => {
+    if (!theme.audio) return;
+    const audio = new GameAudio(theme.audio);
+    audio.preload();
+    audioRef.current = audio;
+    setMuted(audio.muted);
+
+    // Navegadores só liberam som num gesto: libera no primeiro toque/tecla.
+    const unlock = () => audio.unlock();
+    const events = ["pointerdown", "touchend", "keydown", "click"] as const;
+    for (const type of events) window.addEventListener(type, unlock, { capture: true, passive: true });
+    return () => {
+      for (const type of events) window.removeEventListener(type, unlock, { capture: true });
+      audio.dispose();
+      if (audioRef.current === audio) audioRef.current = null;
+    };
+  }, [theme]);
+
+  function toggleMute() {
+    const next = !muted;
+    audioRef.current?.setMuted(next);
+    setMuted(next);
+  }
 
   /* ───────────── Teclado, aba oculta, movimento reduzido ───────────── */
 
@@ -755,20 +924,30 @@ export default function SnakeGame({
         <Stat label={copy.scoreLabel} value={score} strong />
         <Stat label="Recorde" value={Math.max(record, score)} />
         <Speedometer kmh={kmh} maxKmh={MAX_KMH} level={level} maxLevel={MAX_LEVEL} />
-        <button
-          type="button"
-          className="sk-icon-btn"
-          aria-label={status === "playing" ? "Pausar" : "Jogar"}
-          onClick={() => (status === "playing" ? pause() : primaryAction("tap"))}
-        >
-          {status === "playing" ? <IoPause size={20} /> : <IoPlay size={20} />}
-        </button>
+        <div className="sk-hud__actions">
+          {theme.audio && (
+            <button
+              type="button"
+              className="sk-icon-btn"
+              aria-label={muted ? "Ligar o som" : "Desligar o som"}
+              aria-pressed={muted}
+              onClick={toggleMute}
+            >
+              {muted ? <IoVolumeMute size={18} /> : <IoVolumeHigh size={18} />}
+            </button>
+          )}
+          <button
+            type="button"
+            className="sk-icon-btn"
+            aria-label={status === "playing" ? "Pausar" : "Jogar"}
+            onClick={() => (status === "playing" ? pause() : primaryAction("tap"))}
+          >
+            {status === "playing" ? <IoPause size={18} /> : <IoPlay size={18} />}
+          </button>
+        </div>
       </div>
 
-      <div
-        className={`sk-board sk-board--${theme.id}`}
-        style={{ padding: framePad }}
-      >
+      <div className={`sk-board sk-board--${theme.id}`} style={{ padding: framePad }}>
         {theme.id === "classic" && <MarqueeBulbs inner={boardSize} pad={framePad} />}
         <div
           ref={boardRef}
@@ -782,7 +961,11 @@ export default function SnakeGame({
 
           {status === "idle" && (
             <Overlay>
-              <button type="button" className="sk-btn sk-btn--primary" onClick={() => primaryAction("tap")}>
+              <button
+                type="button"
+                className="sk-btn sk-btn--primary"
+                onClick={() => primaryAction("tap")}
+              >
                 <IoPlay size={18} /> Jogar
               </button>
               <p className="sk-overlay__title">{copy.startTitle}</p>
@@ -810,7 +993,11 @@ export default function SnakeGame({
                 {newRecord ? "Novo recorde!" : `Seu recorde: ${Math.max(record, finalScore)}`}
               </p>
               {rank !== null && <p className="sk-overlay__hint">Você está em #{rank}</p>}
-              <button type="button" className="sk-btn sk-btn--primary" onClick={() => primaryAction("tap")}>
+              <button
+                type="button"
+                className="sk-btn sk-btn--primary"
+                onClick={() => primaryAction("tap")}
+              >
                 <IoRefresh size={18} /> Jogar de novo
               </button>
             </Overlay>

@@ -415,4 +415,13 @@ export const carsTheme: SnakeTheme = {
   renderer,
   HeroArt,
   HeroBackdrop,
+  audio: {
+    // Versão 96 kbps da música (3,6 MB em vez de 7,2 MB) — mesma qualidade a 20%.
+    music: { src: "/music/lifeishighway-96k.mp3", volume: 0.2 },
+    sfx: {
+      eat: { src: "/music/coin.mp3", volume: 0.5 },
+      crash: { src: "/music/batida.mp3", volume: 0.5 },
+      countdown: { src: "/music/count-racer.mp3", volume: 0.5 },
+    },
+  },
 };

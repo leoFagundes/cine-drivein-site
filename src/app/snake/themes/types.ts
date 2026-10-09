@@ -1,4 +1,5 @@
 import type { ComponentType } from "react";
+import type { SnakeAudioConfig } from "../gameAudio";
 import type { Point } from "../gameLogic";
 
 export type SnakeThemeId = "classic" | "cars";
@@ -64,4 +65,6 @@ export interface SnakeTheme {
   HeroArt: ComponentType;
   /** Cenário opcional no fundo do cabeçalho. */
   HeroBackdrop?: ComponentType;
+  /** Música e efeitos (volume de 0 a 1). Sem isso, o tema é mudo. */
+  audio?: SnakeAudioConfig;
 }
