@@ -1,6 +1,29 @@
+# No folder listings: they showed "Index of /snake" and exposed files such as
+# /snake/scoreboard.html. MultiViews off: it served snake/scoreboard.txt (Next.js
+# data) in place of the page.
+Options -Indexes -MultiViews
+
+# The static export has both snake.html and a snake/ folder (for the
+# /snake/scoreboard page). Without this, Apache treats /snake as the folder and
+# redirects to /snake/ before the rules below can serve snake.html.
+<IfModule mod_dir.c>
+  DirectorySlash Off
+</IfModule>
+
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
+
+  # /page/ -> /page when page.html exists. Folders are skipped: if a server still
+  # adds the slash to them, redirecting back would loop forever.
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{DOCUMENT_ROOT}/$1.html -f
+  RewriteRule ^(.+)/$ /$1 [L,R=301]
+
+  # /page (or /page/) -> page.html, checked BEFORE folders so a page wins over a
+  # folder with the same name.
+  RewriteCond %{DOCUMENT_ROOT}/$1.html -f
+  RewriteRule ^(.+?)/?$ $1.html [L]
 
   # Serve existing files and directories as-is
   RewriteCond %{REQUEST_FILENAME} -f [OR]
@@ -10,10 +33,6 @@
   # Remove trailing slash (ex: /advertiser/ -> /advertiser)
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule ^(.+)/$ /$1 [L,R=301]
-
-  # Map /path to /path.html when that file exists
-  RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI}.html -f
-  RewriteRule ^(.*)$ $1.html [L]
 </IfModule>
 
 ErrorDocument 404 /404.html
