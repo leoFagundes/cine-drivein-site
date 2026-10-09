@@ -10,6 +10,7 @@ import {
   FaEnvelope,
 } from "react-icons/fa";
 import RevealOnScroll from "@/components/revealOnScroll";
+import { SeasonalTitleOrnament } from "@/components/seasonal/slots";
 
 export default function HowItWorks() {
   const items = [
@@ -137,7 +138,11 @@ export default function HowItWorks() {
 
   return (
     <section className="flex flex-col gap-6 w-11/12 sm:w-10/12 max-w-[1200px] my-8">
-      <RevealOnScroll>
+      <RevealOnScroll className="relative sz-title-space">
+        <SeasonalTitleOrnament
+          seed="Como funcionamos?"
+          className="sz-ornament--start-sm"
+        />
         <h1 className="text-4xl font-semibold text-primary text-center sm:text-left">
           Como funcionamos?
         </h1>

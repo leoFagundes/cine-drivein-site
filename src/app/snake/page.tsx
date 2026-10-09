@@ -3,202 +3,139 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { IoArrowBack, IoCreateOutline } from "react-icons/io5";
-import ClapperBoard from "./ClapperBoard";
 import SnakeGame from "./SnakeGame";
+import PlayerForm from "./PlayerForm";
+import Leaderboard from "./Leaderboard";
 import { useSiteSnakeLeaderboard } from "./useSiteSnakeLeaderboard";
+import { SNAKE_THEME } from "./snakeConfig";
+import { SNAKE_THEMES, SNAKE_THEME_PREVIEW, type SnakeThemeId } from "./themes";
 import {
+  getLegacyPlayerName,
   getOrCreatePlayerId,
-  getSavedPlayerName,
-  savePlayerName,
+  getSavedProfile,
+  saveProfile as saveProfileLocally,
+  toDisplayName,
+  type PlayerProfile,
 } from "@/lib/snakeIdentity";
+import "./snake.css";
 
 export default function SnakePage() {
+  const [themeId, setThemeId] = useState<SnakeThemeId>(SNAKE_THEME);
   const [playerId, setPlayerId] = useState<string | null>(null);
-  const [playerName, setPlayerNameState] = useState<string | null>(null);
-  const [nameInput, setNameInput] = useState("");
-  const [isEditingName, setIsEditingName] = useState(false);
-  const [score, setScore] = useState(0);
+  const [profile, setProfile] = useState<PlayerProfile | null>(null);
+  const [legacyName, setLegacyName] = useState("");
+  const [ready, setReady] = useState(false);
+  const [editing, setEditing] = useState(false);
+
+  const theme = SNAKE_THEMES[themeId];
+  const { copy, HeroArt, HeroBackdrop } = theme;
 
   useEffect(() => {
+    const preview = new URLSearchParams(window.location.search).get("cobrinha");
+    const previewTheme = preview ? SNAKE_THEME_PREVIEW[preview.toLowerCase()] : undefined;
+    if (previewTheme) setThemeId(previewTheme);
+
     setPlayerId(getOrCreatePlayerId());
-    setPlayerNameState(getSavedPlayerName());
+    setProfile(getSavedProfile());
+    setLegacyName(getLegacyPlayerName() ?? "");
+    setReady(true);
   }, []);
 
-  const { highScore, leaderboard, rank, submitScore, updateName } =
-    useSiteSnakeLeaderboard(playerId, playerName);
-  const isInTopTen = leaderboard.some((e) => e.id === playerId);
+  const { highScore, leaderboard, leaderboardLoaded, rank, submitScore, saveProfile } =
+    useSiteSnakeLeaderboard(playerId, profile);
+
+  function handleProfile(next: PlayerProfile) {
+    saveProfileLocally(next);
+    setProfile(next);
+    setEditing(false);
+    void saveProfile(next);
+  }
 
   const handleGameOver = useCallback(
-    (finalScore: number) => {
-      void submitScore(finalScore);
+    (score: number, durationMs: number) => {
+      void submitScore(score, durationMs);
     },
     [submitScore],
   );
 
-  function handleNameSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const trimmed = nameInput.trim();
-    if (!trimmed) return;
-    savePlayerName(trimmed);
-    setPlayerNameState(trimmed);
-    void updateName(trimmed);
-    setIsEditingName(false);
-  }
-
-  function handleEditNameClick() {
-    setNameInput(playerName ?? "");
-    setIsEditingName(true);
-  }
-
   return (
-    <section className="flex flex-col gap-6 w-11/12 sm:w-10/12 max-w-[1200px] my-8 items-center">
-      <div className="flex flex-col items-center gap-2 text-center">
-        <ClapperBoard />
-        <span className="text-xs font-semibold uppercase tracking-[0.25em] text-primary mt-1">
-          Sessão secreta
-        </span>
-        <h1 className="text-3xl sm:text-4xl font-bold text-stone-900">
-          Você encontrou o easter egg!
-        </h1>
-        <p className="text-sm text-stone-500 max-w-md">
-          Já que chegou até aqui, que tal uma partida de Snake?
-        </p>
-      </div>
-
-      {!playerName ? (
-        <form
-          onSubmit={handleNameSubmit}
-          className="flex flex-col items-center gap-3 w-full max-w-xs px-6 py-8 rounded-2xl bg-white border border-stone-200 shadow-sm"
-        >
-          <p className="text-sm font-semibold text-stone-800 text-center">
-            Escolha um nome pro placar
-          </p>
-          <input
-            value={nameInput}
-            onChange={(e) => setNameInput(e.target.value)}
-            maxLength={24}
-            placeholder="Seu nome"
-            autoFocus
-            className="w-full h-11 px-3 rounded-xl border border-stone-200 text-sm outline-none focus:border-primary"
-          />
-          <button
-            type="submit"
-            disabled={!nameInput.trim()}
-            className="w-full h-11 rounded-xl bg-stone-900 text-white text-sm font-semibold disabled:opacity-40"
-          >
-            Jogar
-          </button>
-        </form>
-      ) : (
-        <div className="flex flex-wrap items-start justify-center gap-5 sm:gap-8 w-full">
-          <SnakeGame onScoreChange={setScore} onGameOver={handleGameOver} />
-
-          <div className="flex flex-col gap-5 w-full max-w-xs text-center sm:max-w-none sm:w-56 sm:text-left">
-            <div>
-              <p className="text-[10px] uppercase tracking-[0.3em] text-stone-400">
-                Jogando como
-              </p>
-              {isEditingName ? (
-                <form
-                  onSubmit={handleNameSubmit}
-                  className="flex items-center gap-1.5 mt-1 justify-center sm:justify-start"
-                >
-                  <input
-                    value={nameInput}
-                    onChange={(e) => setNameInput(e.target.value)}
-                    maxLength={24}
-                    autoFocus
-                    className="h-8 w-28 px-2 rounded-lg border border-stone-200 text-xs outline-none focus:border-primary"
-                  />
-                  <button
-                    type="submit"
-                    disabled={!nameInput.trim()}
-                    className="h-8 px-2 rounded-lg bg-stone-900 text-white text-xs font-semibold disabled:opacity-40"
-                  >
-                    Salvar
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setIsEditingName(false)}
-                    className="text-xs text-stone-400 hover:text-stone-600"
-                  >
-                    Cancelar
-                  </button>
-                </form>
-              ) : (
-                <div className="flex items-center gap-1.5 justify-center sm:justify-start">
-                  <p className="text-sm font-semibold text-stone-900 truncate max-w-[140px]">
-                    {playerName}
-                  </p>
-                  <button
-                    type="button"
-                    onClick={handleEditNameClick}
-                    aria-label="Trocar nome"
-                    className="p-1 rounded-md text-stone-500 hover:text-stone-900 hover:bg-stone-100"
-                  >
-                    <IoCreateOutline size={15} />
-                  </button>
-                </div>
-              )}
+    <main data-sk-theme={theme.id} className="sk-page w-full flex justify-center">
+      <div className="flex flex-col gap-5 w-11/12 sm:w-10/12 max-w-[1100px] my-6 sm:my-10">
+        <header className="sk-hero">
+          {HeroBackdrop && <HeroBackdrop />}
+          <div className="relative flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
+            <HeroArt />
+            <div className="flex flex-col items-center sm:items-start gap-1.5 text-center sm:text-left">
+              <span className="sk-hero__eyebrow">{copy.eyebrow}</span>
+              <h1 className="sk-hero__title">{copy.title}</h1>
+              <p className="sk-hero__subtitle">{copy.subtitle}</p>
             </div>
-            <div>
-              <p className="text-[10px] uppercase tracking-[0.3em] text-stone-400">
-                Pontuação
-              </p>
-              <p className="text-2xl font-bold text-stone-900">{score}</p>
-            </div>
-            <div>
-              <p className="text-[10px] uppercase tracking-[0.3em] text-stone-400">
-                Seu recorde
-              </p>
-              <p className="text-lg font-semibold text-primary">
-                {Math.max(highScore, score)}
-              </p>
-            </div>
+          </div>
+        </header>
 
-            {leaderboard.length > 0 && (
-              <div className="rounded-xl px-3 py-3 bg-white border border-stone-200">
-                <p className="text-[10px] uppercase tracking-[0.3em] mb-2 text-stone-400">
-                  Melhores
-                </p>
-                <div className="flex flex-col gap-1.5">
-                  {leaderboard.map((entry, i) => (
-                    <div
-                      key={entry.id}
-                      className={`flex items-center justify-between text-xs ${
-                        entry.id === playerId
-                          ? "font-semibold text-stone-900"
-                          : "text-stone-500"
-                      }`}
+        <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_340px] items-start">
+          <div className="flex flex-col gap-3 w-full max-w-[560px] mx-auto lg:mx-0 lg:max-w-none">
+            {!ready ? (
+              <div className="sk-card sk-placeholder" aria-hidden="true" />
+            ) : !profile ? (
+              <PlayerForm
+                mode="register"
+                copy={copy}
+                initialName={legacyName}
+                onSubmit={handleProfile}
+              />
+            ) : (
+              <>
+                <div className="sk-player">
+                  <span className="sk-player__label">{copy.playingAs}</span>
+                  <strong className="sk-player__name">{toDisplayName(profile.fullName)}</strong>
+                  {!editing && (
+                    <button
+                      type="button"
+                      className="sk-player__edit"
+                      onClick={() => setEditing(true)}
                     >
-                      <span className="truncate">
-                        {i + 1}. {entry.name}
-                      </span>
-                      <span className="flex-shrink-0 ml-2">
-                        {entry.highScore}
-                      </span>
-                    </div>
-                  ))}
+                      <IoCreateOutline size={15} /> Editar
+                    </button>
+                  )}
                 </div>
-
-                {!isInTopTen && rank != null && (
-                  <p className="text-xs mt-2 pt-2 border-t border-stone-100 font-semibold text-stone-900">
-                    Você está em #{rank}
-                  </p>
+                {editing && (
+                  <PlayerForm
+                    mode="edit"
+                    copy={copy}
+                    initialName={profile.fullName}
+                    initialPhone={profile.phone}
+                    onSubmit={handleProfile}
+                    onCancel={() => setEditing(false)}
+                  />
                 )}
-              </div>
+                <SnakeGame
+                  theme={theme}
+                  record={highScore}
+                  rank={rank}
+                  suspended={editing}
+                  onGameOver={handleGameOver}
+                />
+              </>
             )}
           </div>
-        </div>
-      )}
 
-      <Link
-        href="/"
-        className="flex items-center gap-1.5 text-xs text-stone-400 hover:text-stone-600"
-      >
-        <IoArrowBack size={12} />
-        Voltar para o site
-      </Link>
-    </section>
+          <Leaderboard
+            title={copy.leaderboardTitle}
+            emptyText={copy.leaderboardEmpty}
+            entries={leaderboard}
+            loaded={leaderboardLoaded}
+            playerId={playerId}
+            rank={rank}
+            highScore={highScore}
+          />
+        </div>
+
+        <Link href="/" className="sk-back">
+          <IoArrowBack size={13} />
+          Voltar para o site
+        </Link>
+      </div>
+    </main>
   );
 }

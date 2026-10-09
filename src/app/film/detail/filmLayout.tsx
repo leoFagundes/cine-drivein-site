@@ -3,6 +3,10 @@
 import { Film } from "@/types/Types";
 import React from "react";
 import { BiError } from "react-icons/bi";
+import {
+  SeasonalCardTrim,
+  SeasonalTitleOrnament,
+} from "@/components/seasonal/slots";
 
 interface FilmLayoutProps {
   data: Film | undefined;
@@ -32,11 +36,15 @@ export default function FilmLayout({ data }: FilmLayoutProps) {
               ))}
             </div>
           )}
-          <img
-            className="max-w-[350px] rounded-lg shadow-card"
-            src={data?.image}
-            alt="film"
-          />
+          <div className="relative">
+            <SeasonalCardTrim index={1} layer="back" />
+            <img
+              className="relative max-w-[350px] rounded-lg shadow-card"
+              src={data?.image}
+              alt="film"
+            />
+            <SeasonalCardTrim index={0} layer="front" />
+          </div>
         </div>
         <div className="flex flex-col gap-4">
           <p className="font-semibold text-xl">Sinopse</p>
@@ -107,7 +115,12 @@ export default function FilmLayout({ data }: FilmLayoutProps) {
         </div>
       </div>
       <div className="flex flex-col gap-8">
-        <h1 className="text-center text-3xl font-bold text-primary">TRAILER</h1>
+        <div className="relative sz-title-space">
+          <SeasonalTitleOrnament seed="TRAILER" />
+          <h1 className="text-center text-3xl font-bold text-primary">
+            TRAILER
+          </h1>
+        </div>
         <iframe
           className="w-full h-[300px] md:h-[500px] rounded-lg shadow-card"
           src={data?.trailer}

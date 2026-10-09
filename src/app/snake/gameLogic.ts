@@ -116,7 +116,32 @@ export function step(state: GameState, requestedDirection: Direction): GameState
   };
 }
 
-/** Velocidade progressiva: acelera com a pontuação, com piso de segurança. */
-export function tickDurationForScore(score: number): number {
-  return Math.max(70, 150 - score * 3);
+/* ───────────── Velocidade ─────────────
+   Sobe um nível a cada FOODS_PER_LEVEL comidas, um pouquinho por vez,
+   até o teto. Velocidade em células por segundo. */
+
+export const FOODS_PER_LEVEL = 2;
+export const BASE_SPEED = 6.4;
+export const SPEED_STEP = 0.25;
+export const MAX_SPEED = 12.8;
+export const MAX_LEVEL = Math.ceil((MAX_SPEED - BASE_SPEED) / SPEED_STEP);
+
+export function levelForScore(score: number): number {
+  return Math.min(MAX_LEVEL, Math.floor(score / FOODS_PER_LEVEL));
 }
+
+export function speedForLevel(level: number): number {
+  return Math.min(MAX_SPEED, BASE_SPEED + level * SPEED_STEP);
+}
+
+/** Duração de um passo (ms) no nível — o jogo suaviza a troca entre níveis. */
+export function tickMsForLevel(level: number): number {
+  return 1000 / speedForLevel(level);
+}
+
+/** Velocidade "de painel": largada a 95 km/h (o número do McQueen), teto no dobro. */
+export function kmhForLevel(level: number): number {
+  return Math.round((speedForLevel(level) / BASE_SPEED) * 95);
+}
+
+export const MAX_KMH = kmhForLevel(MAX_LEVEL);

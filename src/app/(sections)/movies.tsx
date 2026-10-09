@@ -15,6 +15,7 @@ import { useSiteConfig } from "@/hooks/useSiteConfig";
 import { useCinemaClosure } from "@/hooks/useCinemaClosure";
 import { formatScheduleWindow } from "@/lib/closureSchedule";
 import { trackEvent } from "@/lib/analytics";
+import { SeasonalCardTrim } from "@/components/seasonal/slots";
 
 type FilmWithSession = Film & {
   sessionKey: string;
@@ -28,8 +29,11 @@ export default function Movies() {
     null,
   );
   const { data: siteConfig, loading, error, reload } = useSiteConfig();
-  const { closed: isClosedToday, reason: closureReason, upcoming } =
-    useCinemaClosure(siteConfig);
+  const {
+    closed: isClosedToday,
+    reason: closureReason,
+    upcoming,
+  } = useCinemaClosure(siteConfig);
   const router = useRouter();
 
   useEffect(() => {
@@ -173,11 +177,16 @@ export default function Movies() {
             <div
               key={index}
               onClick={() => {
-                void trackEvent({ type: "filmClick", filmName: title, session: film.sessionKey });
+                void trackEvent({
+                  type: "filmClick",
+                  filmName: title,
+                  session: film.sessionKey,
+                });
                 router.push(`/film/detail/${film.sessionKey}`);
               }}
-              className="w-[350px] group contrast-[1.1] hover:cursor-pointer duration-200"
+              className="relative w-[350px] group contrast-[1.1] hover:cursor-pointer duration-200"
             >
+              <SeasonalCardTrim index={index} layer="back" />
               <div className="relative overflow-hidden rounded-lg shadow-card">
                 <img
                   src={image}
@@ -197,7 +206,7 @@ export default function Movies() {
                   </span>
                 </div>
                 {(film.avisos ?? []).length > 0 && (
-                  <div className="flex flex-col gap-1.5 ml-2 mt-1 absolute bottom-2 right-2 transition-transform duration-300 sm:group-hover:-translate-y-24">
+                  <div className="flex flex-col gap-1.5 ml-2 mt-1 absolute bottom-2 right-2 transition-transform duration-300 sm:group-hover:-translate-y-[102px]">
                     {(film.avisos ?? []).map((aviso, i) => (
                       <div
                         key={i}
@@ -215,6 +224,7 @@ export default function Movies() {
                   </div>
                 )}
               </div>
+              <SeasonalCardTrim index={index} layer="front" />
 
               <div className="flex flex-col relative gap-1 p-3 border-gray rounded-b-lg">
                 <div className="flex justify-between gap-1">

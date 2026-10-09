@@ -15,8 +15,15 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "@/services/firebase";
+import { toDisplayName, type PlayerProfile } from "@/lib/snakeIdentity";
 
-const COLLECTION = "siteSnakeScores";
+/** Placar público: só nome de exibição + pontuação (é o que todo visitante baixa). */
+export const SCORES_COLLECTION = "siteSnakeScores";
+/**
+ * Cadastro dos jogadores (nome completo + telefone). Só a página
+ * /snake/scoreboard lê esta coleção — a /snake pública nunca baixa telefones.
+ */
+export const PLAYERS_COLLECTION = "siteSnakePlayers";
 const MAX_SCORE = 500;
 
 export interface LeaderboardEntry {
@@ -28,30 +35,31 @@ export interface LeaderboardEntry {
 interface UseSiteSnakeLeaderboardResult {
   highScore: number;
   loaded: boolean;
+  leaderboardLoaded: boolean;
   leaderboard: LeaderboardEntry[];
   rank: number | null;
-  submitScore: (score: number) => Promise<boolean>;
-  updateName: (name: string) => Promise<void>;
+  submitScore: (score: number, durationMs: number) => Promise<boolean>;
+  saveProfile: (profile: PlayerProfile) => Promise<void>;
 }
 
 /**
- * Placar público e global da Snake do site — coleção `siteSnakeScores`,
- * separada da `snakeScores` do admin. Sem login: a identidade é um UUID
- * anônimo gerado no navegador (ver `snakeIdentity.ts`).
+ * Placar global da Snake do site. Sem login: a identidade é um UUID anônimo
+ * gerado no navegador (ver `snakeIdentity.ts`), usado como id dos dois docs.
  */
 export function useSiteSnakeLeaderboard(
   playerId: string | null,
-  playerName: string | null,
+  profile: PlayerProfile | null,
 ): UseSiteSnakeLeaderboardResult {
   const [highScore, setHighScore] = useState(0);
   const [loaded, setLoaded] = useState(() => !playerId);
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
+  const [leaderboardLoaded, setLeaderboardLoaded] = useState(false);
   const [rank, setRank] = useState<number | null>(null);
   const highScoreRef = useRef(0);
 
   const refreshLeaderboard = useCallback(() => {
     const q = query(
-      collection(db, COLLECTION),
+      collection(db, SCORES_COLLECTION),
       orderBy("highScore", "desc"),
       limit(10),
     );
@@ -65,7 +73,8 @@ export function useSiteSnakeLeaderboard(
           })),
         );
       })
-      .catch(() => {});
+      .catch(() => {})
+      .finally(() => setLeaderboardLoaded(true));
   }, []);
 
   const refreshRank = useCallback(
@@ -74,7 +83,10 @@ export function useSiteSnakeLeaderboard(
         setRank(null);
         return;
       }
-      const q = query(collection(db, COLLECTION), where("highScore", ">", score));
+      const q = query(
+        collection(db, SCORES_COLLECTION),
+        where("highScore", ">", score),
+      );
       getCountFromServer(q)
         .then((snap) => setRank(snap.data().count + 1))
         .catch(() => setRank(null));
@@ -85,7 +97,7 @@ export function useSiteSnakeLeaderboard(
   useEffect(() => {
     if (!playerId) return;
     let cancelled = false;
-    getDoc(doc(db, COLLECTION, playerId))
+    getDoc(doc(db, SCORES_COLLECTION, playerId))
       .then((snap) => {
         if (cancelled) return;
         const value = snap.exists() ? ((snap.data().highScore as number) ?? 0) : 0;
@@ -107,40 +119,78 @@ export function useSiteSnakeLeaderboard(
   }, [refreshLeaderboard]);
 
   const submitScore = useCallback(
-    async (score: number) => {
-      if (!playerId || score <= highScoreRef.current) return false;
+    async (score: number, durationMs: number) => {
+      if (!playerId || !profile || score <= highScoreRef.current) return false;
       const clamped = Math.min(score, MAX_SCORE);
       highScoreRef.current = clamped;
       setHighScore(clamped);
-      try {
-        await setDoc(
-          doc(db, COLLECTION, playerId),
+      // Independentes: se uma falhar (ex.: regra ainda não publicada), a outra segue.
+      await Promise.allSettled([
+        setDoc(
+          doc(db, SCORES_COLLECTION, playerId),
           {
-            name: playerName ?? "Jogador",
+            name: toDisplayName(profile.fullName),
             highScore: clamped,
             updatedAt: serverTimestamp(),
           },
           { merge: true },
-        );
-        refreshLeaderboard();
-        refreshRank(clamped);
-      } catch {}
+        ),
+        setDoc(
+          doc(db, PLAYERS_COLLECTION, playerId),
+          {
+            fullName: profile.fullName,
+            phone: profile.phone,
+            bestScore: clamped,
+            bestDurationMs: Math.max(0, Math.round(durationMs)),
+            updatedAt: serverTimestamp(),
+          },
+          { merge: true },
+        ),
+      ]);
+      refreshLeaderboard();
+      refreshRank(clamped);
       return true;
     },
-    [playerId, playerName, refreshLeaderboard, refreshRank],
+    [playerId, profile, refreshLeaderboard, refreshRank],
   );
 
-  /** Atualiza o nome no placar já publicado, sem esperar por um novo recorde. */
-  const updateName = useCallback(
-    async (name: string) => {
-      if (!playerId || highScoreRef.current <= 0) return;
-      try {
-        await setDoc(doc(db, COLLECTION, playerId), { name }, { merge: true });
-        refreshLeaderboard();
-      } catch {}
+  /** Grava o cadastro e, se já houver recorde, atualiza o nome no placar. */
+  const saveProfile = useCallback(
+    async (next: PlayerProfile) => {
+      if (!playerId) return;
+      const writes: Promise<void>[] = [
+        setDoc(
+          doc(db, PLAYERS_COLLECTION, playerId),
+          {
+            fullName: next.fullName,
+            phone: next.phone,
+            updatedAt: serverTimestamp(),
+          },
+          { merge: true },
+        ),
+      ];
+      if (highScoreRef.current > 0) {
+        writes.push(
+          setDoc(
+            doc(db, SCORES_COLLECTION, playerId),
+            { name: toDisplayName(next.fullName) },
+            { merge: true },
+          ),
+        );
+      }
+      await Promise.allSettled(writes);
+      refreshLeaderboard();
     },
     [playerId, refreshLeaderboard],
   );
 
-  return { highScore, loaded, leaderboard, rank, submitScore, updateName };
+  return {
+    highScore,
+    loaded,
+    leaderboardLoaded,
+    leaderboard,
+    rank,
+    submitScore,
+    saveProfile,
+  };
 }

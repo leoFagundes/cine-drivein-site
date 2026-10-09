@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { FaInstagram, FaFacebookF, FaWhatsapp } from "react-icons/fa";
 import { MdOutlineAlternateEmail } from "react-icons/md";
 import { useLogoEasterEgg } from "@/hooks/useLogoEasterEgg";
+import { SeasonalGround } from "@/components/seasonal/slots";
 
 const SOCIAL_LINKS = [
   {
@@ -45,6 +46,7 @@ export default function Footer() {
 
   return (
     <footer id="contact" className="w-11/12 sm:w-10/12 max-w-[1200px] py-6">
+      <SeasonalGround />
       <hr className="mb-6 border-gray-200" />
 
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">

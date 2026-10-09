@@ -2,12 +2,35 @@
 @tailwind components;
 @tailwind utilities;
 
+/* --color-primary-rgb alimenta o Tailwind (text-primary/50 etc.);
+   --color-primary-strong-rgb é o fundo dos botões com texto branco. */
 :root {
   --color-primary: #0088c2;
+  --color-primary-rgb: 0 136 194;
+  --color-primary-strong-rgb: 0 136 194;
+}
+
+html[data-seasonal="christmas"] {
+  --color-primary: #cc1e1e;
+  --color-primary-rgb: 204 30 30;
+  --color-primary-strong-rgb: 204 30 30;
+}
+
+/* Laranja um tom mais fechado nos botões: texto branco legível. */
+html[data-seasonal="halloween"] {
+  --color-primary: #ff7800;
+  --color-primary-rgb: 255 120 0;
+  --color-primary-strong-rgb: 224 90 0;
+}
+
+html[data-seasonal="easter"] {
+  --color-primary: #c2348a;
+  --color-primary-rgb: 194 52 138;
+  --color-primary-strong-rgb: 194 52 138;
 }
 
 ::selection {
-  background-color: #0088c2;
+  background-color: var(--color-primary);
   color: white;
 }
 
@@ -21,21 +44,6 @@ body {
   background-repeat: no-repeat;
   background-size: cover;
   transition: background-color 0.8s ease;
-}
-
-body.theme-christmas {
-  --color-primary: #cc1e1e;
-  background-color: #e0eaf5;
-}
-
-body.theme-halloween {
-  --color-primary: #ff7800;
-  background-color: #1a1a2e;
-}
-
-body.theme-easter {
-  --color-primary: #c2348a;
-  background-color: #fdf6f0;
 }
 
 @layer utilities {
@@ -61,44 +69,4 @@ body.theme-easter {
 
 .hero-enter-delayed {
   animation: heroReveal 0.7s ease-out 0.15s both;
-}
-
-@keyframes emberFloat {
-  0% {
-    transform: translateY(0) translateX(0);
-    opacity: 0;
-  }
-  15% {
-    opacity: 0.85;
-  }
-  50% {
-    transform: translateY(-45vh) translateX(18px);
-  }
-  85% {
-    opacity: 0.6;
-  }
-  100% {
-    transform: translateY(-100vh) translateX(-10px);
-    opacity: 0;
-  }
-}
-
-@keyframes petalFloat {
-  0% {
-    transform: translateY(0) translateX(0) rotate(0deg);
-    opacity: 0;
-  }
-  15% {
-    opacity: 0.9;
-  }
-  50% {
-    transform: translateY(-40vh) translateX(22px) rotate(120deg);
-  }
-  85% {
-    opacity: 0.6;
-  }
-  100% {
-    transform: translateY(-90vh) translateX(-12px) rotate(240deg);
-    opacity: 0;
-  }
 }

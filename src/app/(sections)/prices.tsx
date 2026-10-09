@@ -93,14 +93,14 @@ export default function Prices() {
               Vendas online no Velox Tickets
             </Link>
             <div className="flex flex-col sm:flex-row gap-2 max-w-80">
-              <FaCircleInfo className="min-w-6" color="#0088C2" size="20px" />
+              <FaCircleInfo className="min-w-6 text-primary" size="20px" />
               <p className="font-semibold">
                 Estudantes com carteirinha, idosos e crianças até 10 anos têm
                 direito a meia-entrada.
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-2 max-w-80">
-              <FaCircleInfo className="min-w-6" color="#0088C2" size="20px" />
+              <FaCircleInfo className="min-w-6 text-primary" size="20px" />
               <p className="flex gap-2 font-semibold">
                 A bilheteira abre às 17h30 e o cinema está aberto até às 23h30.
               </p>

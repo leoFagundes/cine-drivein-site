@@ -18,6 +18,10 @@ import {
 import { usePathname } from "next/navigation";
 import { trackEvent, PageClickKey } from "@/lib/analytics";
 import { useSiteConfig } from "@/hooks/useSiteConfig";
+import {
+  SeasonalHeaderTrim,
+  SeasonalLogoAccessory,
+} from "@/components/seasonal/slots";
 
 const overlayVariants: Variants = {
   hidden: { opacity: 0 },
@@ -129,9 +133,15 @@ export default function Header() {
       <div className="h-[100px] lg:h-[80px]" />
       <section className="fixed left-0 top-0 flex justify-center w-full z-40 bg-secondary/85 backdrop-blur-sm px-3">
         <nav className="flex items-center justify-between h-20 py-4 w-11/12 sm:w-10/12 max-w-[1200px]">
-          <Link href={"/"}>
-            {" "}
-            <Image src={"/svg/logo.svg"} width={120} height={60} alt="logo" />
+          <Link href={"/"} className="relative">
+            <Image
+              className="relative"
+              src={"/svg/logo.svg"}
+              width={120}
+              height={60}
+              alt="logo"
+            />
+            <SeasonalLogoAccessory />
           </Link>
 
           <ul className="items-center gap-7 font-semibold text-xs hidden lg:flex">
@@ -163,6 +173,7 @@ export default function Header() {
             </div>
           </div>
         </nav>
+        <SeasonalHeaderTrim />
       </section>
 
       <AnimatePresence>
@@ -221,7 +232,7 @@ export default function Header() {
                           className={classNames(
                             "flex items-center gap-3.5 px-4 py-3.5 rounded-2xl font-semibold text-sm transition-colors duration-150",
                             isActive
-                              ? "bg-color-primary/10 text-color-primary"
+                              ? "bg-color-primary/10 text-primary"
                               : "text-stone-700 hover:bg-stone-100",
                           )}
                           href={item.link}
@@ -236,7 +247,7 @@ export default function Header() {
                               "flex items-center justify-center w-10 h-10 rounded-full",
                               isActive
                                 ? "bg-color-primary text-white"
-                                : "bg-stone-100 text-color-primary",
+                                : "bg-stone-100 text-primary",
                             )}
                           >
                             {item.icon}

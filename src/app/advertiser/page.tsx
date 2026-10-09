@@ -8,6 +8,7 @@ import {
 import { FaDesktop, FaCar } from "react-icons/fa";
 import Link from "next/link";
 import RevealOnScroll from "@/components/revealOnScroll";
+import { SeasonalTitleOrnament } from "@/components/seasonal/slots";
 
 export default function BecomeAnAdvertiser() {
   return (
@@ -35,9 +36,12 @@ export default function BecomeAnAdvertiser() {
 
       <RevealOnScroll delay={100} className="relative">
         <div className="flex gap-4 flex-col w-full md:w-[60%]">
-          <h1 className="text-center self-center text-primary font-semibold text-3xl">
-            SUA EMPRESA NO CINEMA
-          </h1>
+          <div className="relative self-center sz-title-space">
+            <SeasonalTitleOrnament seed="SUA EMPRESA NO CINEMA" />
+            <h1 className="text-center text-primary font-semibold text-3xl">
+              SUA EMPRESA NO CINEMA
+            </h1>
+          </div>
           <p className="font-semibold">
             O Cine Drive-In de Brasília: Uma Oportunidade Única de Conexão com
             seu Público

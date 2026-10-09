@@ -9,13 +9,13 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        primary: "var(--color-primary)",
+        primary: "rgb(var(--color-primary-rgb) / <alpha-value>)",
         gray: "#4A4A4A",
       },
       backgroundColor: {
         primary: "#E6EFF6",
         secondary: "#eef2f7",
-        "color-primary": "#0088C2",
+        "color-primary": "rgb(var(--color-primary-strong-rgb) / <alpha-value>)",
       },
       backgroundImage: {
         "circular-gradient":

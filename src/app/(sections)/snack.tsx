@@ -44,8 +44,7 @@ export default function Snack() {
                   setCardapioOpen(true);
                   void trackEvent({ type: "pageClick", key: "cardapio" });
                 }}
-                className="flex items-center gap-2 px-5 py-3 rounded-xl font-bold text-sm text-white transition-all duration-200 hover:opacity-90 hover:scale-105 active:scale-95 cursor-pointer shadow-md"
-                style={{ backgroundColor: "var(--color-primary)" }}
+                className="flex items-center gap-2 px-5 py-3 rounded-xl font-bold text-sm text-white bg-color-primary transition-all duration-200 hover:opacity-90 hover:scale-105 active:scale-95 cursor-pointer shadow-md"
               >
                 <IoRestaurantOutline size={17} />
                 Ver cardápio
